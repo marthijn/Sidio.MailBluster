@@ -52,11 +52,4 @@ public abstract record LeadBase
     [JsonPropertyName("ipAddress")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? IpAddress { get; init; }
-
-    /// <summary>
-    /// Gets the tags.
-    /// </summary>
-    [JsonPropertyName("tags")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string[]? Tags { get; init; }
 }

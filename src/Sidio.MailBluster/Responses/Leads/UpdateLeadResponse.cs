@@ -3,8 +3,14 @@ using Sidio.MailBluster.Models;
 
 namespace Sidio.MailBluster.Responses.Leads;
 
+/// <summary>
+/// The update lead response.
+/// </summary>
 public sealed record UpdateLeadResponse : MailBlusterResponse
 {
+    /// <summary>
+    /// Gets the lead.
+    /// </summary>
     [JsonPropertyName("lead")]
     public Lead? Lead { get; set; }
 }

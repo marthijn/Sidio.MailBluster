@@ -27,6 +27,13 @@ public record Lead : LeadBase
     public string? OptInStatus { get; init; }
 
     /// <summary>
+    /// Gets the tags.
+    /// </summary>
+    [JsonPropertyName("tags")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string[]? Tags { get; init; }
+
+    /// <summary>
     /// Gets the created date.
     /// </summary>
     [JsonPropertyName("createdAt")]
