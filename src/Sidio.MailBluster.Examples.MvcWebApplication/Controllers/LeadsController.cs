@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sidio.MailBluster.MvcWebApplication.Models;
-using Sidio.MailBluster.MvcWebApplication.Services;
+using Sidio.MailBluster.Examples.MvcWebApplication.Models;
+using Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
-namespace Sidio.MailBluster.MvcWebApplication.Controllers;
+namespace Sidio.MailBluster.Examples.MvcWebApplication.Controllers;
 
 public sealed class LeadsController : Controller
 {

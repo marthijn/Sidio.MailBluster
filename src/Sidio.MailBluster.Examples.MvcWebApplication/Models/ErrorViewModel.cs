@@ -1,4 +1,4 @@
-namespace Sidio.MailBluster.MvcWebApplication.Models
+namespace Sidio.MailBluster.Examples.MvcWebApplication.Models
 {
     public class ErrorViewModel
     {

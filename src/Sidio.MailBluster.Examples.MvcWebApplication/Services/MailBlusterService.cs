@@ -1,6 +1,6 @@
 ﻿using Flurl.Http.Configuration;
 
-namespace Sidio.MailBluster.MvcWebApplication.Services;
+namespace Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
 public sealed class MailBlusterService
 {

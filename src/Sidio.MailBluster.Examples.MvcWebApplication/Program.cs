@@ -1,6 +1,6 @@
 using Flurl.Http.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Sidio.MailBluster.MvcWebApplication.Services;
+using Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{0A594096-1210-4E8D-B850-A922270A44A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidio.MailBluster.MvcWebApplication", "src\Sidio.MailBluster.MvcWebApplication\Sidio.MailBluster.MvcWebApplication.csproj", "{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidio.MailBluster.Examples.MvcWebApplication", "src\Sidio.MailBluster.Examples.MvcWebApplication\Sidio.MailBluster.Examples.MvcWebApplication.csproj", "{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{1F209AA5-890A-4B11-9206-D12F9CBDE4E1}"
 	ProjectSection(SolutionItems) = preProject

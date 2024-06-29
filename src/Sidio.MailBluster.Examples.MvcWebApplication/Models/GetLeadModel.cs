@@ -1,6 +1,6 @@
 ﻿using Sidio.MailBluster.Responses.Leads;
 
-namespace Sidio.MailBluster.MvcWebApplication.Models;
+namespace Sidio.MailBluster.Examples.MvcWebApplication.Models;
 
 public sealed record GetLeadModel
 {
