@@ -37,6 +37,7 @@ public abstract record LeadBase
     /// Gets the fields.
     /// </summary>
     [JsonPropertyName("fields")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Fields? Fields { get; init; }
 
     /// <summary>

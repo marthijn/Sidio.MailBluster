@@ -65,7 +65,7 @@ public sealed class MailBlusterClient : IMailBlusterClient
             _logger.LogDebug("Creating lead with Email `{Email}`", request.Email.ObfuscateEmailAddress());
         }
 
-        var response = await CreateClient()
+        var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads)
             .PostJsonAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -85,7 +85,7 @@ public sealed class MailBlusterClient : IMailBlusterClient
             _logger.LogDebug("Get lead with Email `{Email}`", email.ObfuscateEmailAddress());
         }
 
-        var response = await CreateClient()
+        var response = await DefaultClient
             .AllowHttpStatus((int)HttpStatusCode.NotFound)
             .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
             .GetAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -115,7 +115,7 @@ public sealed class MailBlusterClient : IMailBlusterClient
             _logger.LogDebug("Updating lead with Email `{Email}`", email.ObfuscateEmailAddress());
         }
 
-        var response = await CreateClient()
+        var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
             .PutJsonAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
@@ -136,7 +136,7 @@ public sealed class MailBlusterClient : IMailBlusterClient
         }
 
         var md5 = CreateMd5Hash(email);
-        var response = await CreateClient()
+        var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads, md5)
             .DeleteAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         var result = await response.GetJsonAsync<DeleteLeadResponse>().ConfigureAwait(false);
@@ -152,7 +152,7 @@ public sealed class MailBlusterClient : IMailBlusterClient
         return Convert.ToHexString(hashBytes).ToLower();
     }
 
-    private IFlurlClient CreateClient() =>
+    private IFlurlClient DefaultClient =>
         _client
             .WithHeader(AuthorizationHeader, _apiKey)
             .WithHeader(CacheControlHeader, NoCache);

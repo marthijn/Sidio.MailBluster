@@ -11,7 +11,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Description>Sidio.MailBluster is an unofficial C# SDK for the MailBluster API</Description>
+        <Description>Sidio.MailBluster is an unofficial C# SDK for the MailBluster API.</Description>
         <PackageTags>csharp sdk mailbluster api httpclient</PackageTags>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
