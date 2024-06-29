@@ -1,0 +1,21 @@
+{
+  "firstName": "Richard",
+  "lastName": "Hendricks",
+  "fields" : {
+    "gender": "Male",
+    "address": "Silicon Valley"
+  },
+  "email": "richard@example.com",
+  "ipAddress": "162.213.1.246",
+  "subscribed": false,
+  "doubleOptIn": true,
+  "meta": {
+    "company": "Pied Piper",
+    "role": "CEO"
+  },
+  "tags": [
+    "iPhone User",
+    "Startup"
+  ],
+  "overrideExisting": true
+}

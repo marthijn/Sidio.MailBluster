@@ -1,0 +1,36 @@
+﻿@using System.Text.Json
+@model Sidio.MailBluster.MvcWebApplication.Models.GetLeadModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+
+<div class="row">
+    <p>Find a lead:</p>
+    <div class="row-cols-md-2">
+        <form asp-action="GetLead" method="POST">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="EmailAddress" class="control-label"></label>
+                <input asp-for="EmailAddress" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Lead != null)
+{
+    <p>Response:</p>
+    <div class="row">
+        <textarea rows="20">
+            @JsonSerializer.Serialize(Model.Lead, new JsonSerializerOptions { WriteIndented = true })
+        </textarea>
+    </div>
+}
+

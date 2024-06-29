@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sidio.MailBluster", "src\Sidio.MailBluster\Sidio.MailBluster.csproj", "{B305572D-7574-438D-BEB9-074CC7FBD5AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{65F6C9B7-98E9-4DAF-8610-D6078E52A7EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{61EBF6BD-8B25-4166-BC26-E01DFD6CA34E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sidio.MailBluster.Tests", "src\Sidio.MailBluster.Tests\Sidio.MailBluster.Tests.csproj", "{277B5A74-2825-4025-B6B9-12136653664B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{8E3E6C64-3A76-4D15-9397-029A2BDC925B}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{0A594096-1210-4E8D-B850-A922270A44A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidio.MailBluster.MvcWebApplication", "src\Sidio.MailBluster.MvcWebApplication\Sidio.MailBluster.MvcWebApplication.csproj", "{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{1F209AA5-890A-4B11-9206-D12F9CBDE4E1}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B305572D-7574-438D-BEB9-074CC7FBD5AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B305572D-7574-438D-BEB9-074CC7FBD5AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B305572D-7574-438D-BEB9-074CC7FBD5AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B305572D-7574-438D-BEB9-074CC7FBD5AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{277B5A74-2825-4025-B6B9-12136653664B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{277B5A74-2825-4025-B6B9-12136653664B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{277B5A74-2825-4025-B6B9-12136653664B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{277B5A74-2825-4025-B6B9-12136653664B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B305572D-7574-438D-BEB9-074CC7FBD5AF} = {65F6C9B7-98E9-4DAF-8610-D6078E52A7EE}
+		{277B5A74-2825-4025-B6B9-12136653664B} = {61EBF6BD-8B25-4166-BC26-E01DFD6CA34E}
+		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1} = {0A594096-1210-4E8D-B850-A922270A44A6}
+	EndGlobalSection
+EndGlobal

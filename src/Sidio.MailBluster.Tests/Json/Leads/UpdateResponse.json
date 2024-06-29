@@ -1,0 +1,34 @@
+{
+  "message": "Lead updated",
+  "lead": {
+    "id": 329395,
+    "firstName": "Richard",
+    "lastName": "Hendricks",
+    "fullName": "Richard Hendricks",
+    "fields" : {
+      "gender": "Male",
+      "hobby": "Programming"
+    },
+    "email": "richard@example.com",
+    "timezone": "America/Los_Angeles",
+    "ipAddress": "162.213.1.246",
+    "subscribed": true,
+    "optInStatus": "waiting",
+    "meta": {
+      "company": "Piper Net",
+      "role": "CEO",
+      "continent": "North America",
+      "country": "United States",
+      "city": "San Jose",
+      "latitude": 37.3008,
+      "longitude": -121.9777,
+      "source": "Lead API"
+    },
+    "tags": [
+      "Startup",
+      "Entrepreneur"
+    ],
+    "createdAt": "2016-07-23T08:03:18.954Z",
+    "updatedAt": "2016-08-05T01:05:02.011Z"
+  }
+}

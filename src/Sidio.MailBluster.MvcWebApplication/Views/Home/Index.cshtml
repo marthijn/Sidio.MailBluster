@@ -1,0 +1,25 @@
+﻿@model Sidio.MailBluster.MvcWebApplication.Models.SetApiKeyModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+
+<div class="row">
+    <p>First set your API key:</p>
+    <div class="row-cols-md-2">
+        <form asp-action="SetApiKey" method="POST">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ApiKey" class="control-label"></label>
+                <input asp-for="ApiKey" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Set</button>
+            </div>
+        </form>
+    </div>
+</div>
+
