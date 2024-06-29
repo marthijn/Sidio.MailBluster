@@ -41,8 +41,9 @@ public class MyClass
 }
 ```
 
-## Logging
-Be aware when the log level `Trace` is used, sensitive data might be logged.
+# Logging
+⚠️ Be aware when the log level `Trace` is used, sensitive data (e.g. email address, names) might be logged. It is recommended
+not to use trace logging in production environments.
 
 # Feature status
 - [x] Manage leads
