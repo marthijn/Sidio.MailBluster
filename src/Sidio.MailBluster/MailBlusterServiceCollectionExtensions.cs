@@ -21,10 +21,7 @@ public static class MailBlusterServiceCollectionExtensions
     {
         services.Configure<MailBlusterOptions>(configuration);
 
-        services.TryAddSingleton<IFlurlClientCache, FlurlClientCache>();
-        services.AddScoped<IMailBlusterClient, MailBlusterClient>();
-
-        return services;
+        return services.AddMailBlusterInternal();
     }
 
     /// <summary>
@@ -40,9 +37,26 @@ public static class MailBlusterServiceCollectionExtensions
         services.AddOptions<MailBlusterOptions>().Configure<IConfiguration>(
             (settings, configuration) => { configuration.GetSection(configurationSection).Bind(settings); });
 
+        return services.AddMailBlusterInternal();
+    }
+
+    /// <summary>
+    /// Adds MailBluster using the options pattern.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="options">The options.</param>
+    /// <returns>The <see cref="IServiceCollection"/>.</returns>
+    public static IServiceCollection AddMailBluster(this IServiceCollection services, Action<MailBlusterOptions> options)
+    {
+        services.Configure(options);
+
+        return services.AddMailBlusterInternal();
+    }
+
+    private static IServiceCollection AddMailBlusterInternal(this IServiceCollection services)
+    {
         services.TryAddSingleton<IFlurlClientCache, FlurlClientCache>();
         services.AddScoped<IMailBlusterClient, MailBlusterClient>();
-
         return services;
     }
 }

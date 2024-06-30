@@ -9,6 +9,7 @@ on:
 
 env:
   DOTNET_NOLOGO: true
+  MAILBLUSTER_API_KEY: ${{ secrets.MAILBLUSTER_API_KEY }}
   NuGetDirectory: ${{ github.workspace}}/nuget/release
 
 jobs:

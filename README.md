@@ -67,5 +67,13 @@ not to use trace logging in production environments.
     - [ ] Update
     - [ ] Delete
 
+# Integration tests
+Integration tests are available in the `Sidio.MailBluster.Integration.Tests` project. To run the tests, add the following configuration file `local.settings.json`:
+```json
+{
+  "MAILBLUSTER_API_KEY": "your-api-key"
+}
+```
+
 # API Documentation
 - [MailBluster API](https://mailbluster.com/docs/api)
