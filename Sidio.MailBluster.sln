@@ -27,8 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidio.MailBluster.IntegrationTestRunner", "src\Sidio.MailBluster.IntegrationTestRunner\Sidio.MailBluster.IntegrationTestRunner.csproj", "{BC57B09F-D4D0-42D1-BFB5-5C4238DFB1CE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidio.MailBluster.Integration.Tests", "src\Sidio.MailBluster.Integration.Tests\Sidio.MailBluster.Integration.Tests.csproj", "{F7792EB2-B82F-4290-AC3E-BFEB55AB826A}"
 EndProject
 Global
@@ -49,10 +47,6 @@ Global
 		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC57B09F-D4D0-42D1-BFB5-5C4238DFB1CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC57B09F-D4D0-42D1-BFB5-5C4238DFB1CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC57B09F-D4D0-42D1-BFB5-5C4238DFB1CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC57B09F-D4D0-42D1-BFB5-5C4238DFB1CE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7792EB2-B82F-4290-AC3E-BFEB55AB826A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F7792EB2-B82F-4290-AC3E-BFEB55AB826A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7792EB2-B82F-4290-AC3E-BFEB55AB826A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,7 +59,6 @@ Global
 		{B305572D-7574-438D-BEB9-074CC7FBD5AF} = {65F6C9B7-98E9-4DAF-8610-D6078E52A7EE}
 		{277B5A74-2825-4025-B6B9-12136653664B} = {61EBF6BD-8B25-4166-BC26-E01DFD6CA34E}
 		{5EC62BCA-4595-4C80-9760-BBE92C9B75C1} = {0A594096-1210-4E8D-B850-A922270A44A6}
-		{BC57B09F-D4D0-42D1-BFB5-5C4238DFB1CE} = {61EBF6BD-8B25-4166-BC26-E01DFD6CA34E}
 		{F7792EB2-B82F-4290-AC3E-BFEB55AB826A} = {61EBF6BD-8B25-4166-BC26-E01DFD6CA34E}
 	EndGlobalSection
 EndGlobal
