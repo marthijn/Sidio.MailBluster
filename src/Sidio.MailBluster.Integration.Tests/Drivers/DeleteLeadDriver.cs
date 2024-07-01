@@ -1,17 +1,20 @@
-﻿namespace Sidio.MailBluster.Integration.Tests.Drivers;
+﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+
+namespace Sidio.MailBluster.Integration.Tests.Drivers;
 
 [Binding]
 public sealed class DeleteLeadDriver
 {
-    private readonly IMailBlusterClient _client;
+    private readonly LeadRepository _repository;
 
-    public DeleteLeadDriver(IMailBlusterClient client)
+    public DeleteLeadDriver(LeadRepository repository)
     {
-        _client = client;
+        _repository = repository;
     }
 
     public async Task DeleteLeadAsync(string email)
     {
-        await _client.DeleteLeadAsync(email);
+        var result = await _repository.DeleteAsync(email);
+        result.Should().NotBeNull();
     }
 }

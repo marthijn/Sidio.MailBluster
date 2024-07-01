@@ -119,6 +119,74 @@ this.ScenarioInitialize(scenarioInfo);
             await this.ScenarioCleanupAsync();
         }
         
+        [Xunit.SkippableFactAttribute(DisplayName="Update a lead")]
+        [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for leads")]
+        [Xunit.TraitAttribute("Description", "Update a lead")]
+        [Xunit.TraitAttribute("Category", "createLead")]
+        [Xunit.TraitAttribute("Category", "cleanupLead")]
+        public async System.Threading.Tasks.Task UpdateALead()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "createLead",
+                    "cleanupLead"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Update a lead", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 11
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 12
+    await testRunner.GivenAsync("a lead exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 13
+    await testRunner.WhenAsync("the lead is updated", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 14
+    await testRunner.ThenAsync("the lead should be updated", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Delete a lead")]
+        [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for leads")]
+        [Xunit.TraitAttribute("Description", "Delete a lead")]
+        [Xunit.TraitAttribute("Category", "createLead")]
+        public async System.Threading.Tasks.Task DeleteALead()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "createLead"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete a lead", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 17
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 18
+    await testRunner.GivenAsync("a lead exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 19
+    await testRunner.WhenAsync("the lead is deleted", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 20
+    await testRunner.ThenAsync("the lead should not exist", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
         [System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "2.0.0.0")]
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         public class FixtureData : object, Xunit.IAsyncLifetime

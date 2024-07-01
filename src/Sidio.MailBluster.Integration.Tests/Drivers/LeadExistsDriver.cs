@@ -1,25 +1,29 @@
-﻿namespace Sidio.MailBluster.Integration.Tests.Drivers;
+﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+using Sidio.MailBluster.Models;
+
+namespace Sidio.MailBluster.Integration.Tests.Drivers;
 
 [Binding]
 public sealed class LeadExistsDriver
 {
-    private readonly IMailBlusterClient _client;
+    private readonly LeadRepository _repository;
 
-    public LeadExistsDriver(IMailBlusterClient client)
+    public LeadExistsDriver(LeadRepository repository)
     {
-        _client = client;
+        _repository = repository;
     }
 
     public async Task LeadShouldNotExistAsync(string email)
     {
-        var result = await _client.GetLeadAsync(email);
+        var result = await _repository.GetAsync(email);
         result.Should().BeNull();
     }
 
-    public async Task LeadShouldExistAsync(string email)
+    public async Task<Lead> LeadShouldExistAsync(string email)
     {
-        var result = await _client.GetLeadAsync(email);
+        var result = await _repository.GetAsync(email);
         result.Should().NotBeNull();
         result!.Email.Should().Be(email);
+        return result;
     }
 }

@@ -1,4 +1,6 @@
-﻿using Xunit.Abstractions;
+﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+using Sidio.MailBluster.Models;
+using Xunit.Abstractions;
 
 namespace Sidio.MailBluster.Integration.Tests.Hooks;
 
@@ -7,27 +9,40 @@ public sealed class CleanupLeadHook
 {
     internal const string ContextKey = "lead-email";
 
-    private readonly IMailBlusterClient _client;
+    private readonly LeadRepository _repository;
 
-    public CleanupLeadHook(IMailBlusterClient client)
+    public CleanupLeadHook(LeadRepository repository)
     {
-        _client = client;
+        _repository = repository;
     }
 
     [AfterScenario("cleanupLead")]
     public async Task CleanupAsync(ScenarioContext scenarioContext)
     {
         var testOutputHelper = GetTestOutputHelper(scenarioContext);
-        var email = scenarioContext.Get<string>(ContextKey);
-        if (!string.IsNullOrWhiteSpace(email))
+
+        var deleteResult = false;
+        if (scenarioContext.TryGetValue(ContextKey, out string email) && !string.IsNullOrWhiteSpace(email))
         {
-            var result = await _client.DeleteLeadAsync(email);
-            testOutputHelper.WriteLine($"Trying to delete lead with email `{email}`: {result.Message}");
+            deleteResult = await DeleteLead(email, testOutputHelper);
         }
-        else
+
+        if (scenarioContext.TryGetValue(CreateLeadHook.ContextKey, out Lead lead) && lead != null)
         {
-            testOutputHelper.WriteLine("No email found in scenario context, skipping cleanup");
+            deleteResult = await DeleteLead(lead.Email, testOutputHelper);
         }
+
+        if (!deleteResult)
+        {
+            testOutputHelper.WriteLine("No email or lead found in scenario context, skipping cleanup");
+        }
+    }
+
+    private async Task<bool> DeleteLead(string email, ITestOutputHelper testOutputHelper)
+    {
+        var result = await _repository.DeleteAsync(email);
+        testOutputHelper.WriteLine($"Trying to delete lead with email `{email}`: {result.Message}");
+        return !string.IsNullOrWhiteSpace(result.LeadHash);
     }
 
     private static ITestOutputHelper GetTestOutputHelper(ScenarioContext scenarioContext) => scenarioContext.ScenarioContainer.Resolve<ITestOutputHelper>();

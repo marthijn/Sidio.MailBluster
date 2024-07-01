@@ -1,6 +1,11 @@
-﻿using System.Text.Json;
+﻿using System.Net;
+using System.Text.Json;
+using Flurl.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using Polly.Retry;
 using Reqnroll.Microsoft.Extensions.DependencyInjection;
+using Sidio.MailBluster.Integration.Tests.Repositories;
 
 namespace Sidio.MailBluster.Integration.Tests;
 
@@ -16,6 +21,24 @@ public sealed class SetupTestDependencies
 
         var services = new ServiceCollection();
         services.AddLogging();
+
+        // MailBluster: The API has a rate limit of 10 requests/second and 100 requests/minute.
+        services.AddScoped<AsyncRetryPolicy>(
+            _ =>
+            {
+                var retryPolicy = Policy
+                    .Handle<FlurlHttpException>(IsTransientError)
+                    .WaitAndRetryAsync(
+                        3,
+                        _ =>
+                        {
+                            var nextAttemptIn = TimeSpan.FromSeconds(60);
+                            return nextAttemptIn;
+                        });
+
+                return retryPolicy;
+            });
+        services.AddScoped<LeadRepository>();
 
         services.AddMailBluster(
             options => { options.ApiKey = mailBlusterApiKey; });
@@ -38,5 +61,19 @@ public sealed class SetupTestDependencies
         {
             Environment.SetEnvironmentVariable(variable.Name, variable.Value.ToString());
         }
+    }
+
+    private static bool IsTransientError(FlurlHttpException exception)
+    {
+        int[] transientHttpStatusCodes =
+        [
+            (int)HttpStatusCode.TooManyRequests,
+            (int)HttpStatusCode.RequestTimeout,
+            (int)HttpStatusCode.BadGateway,
+            (int)HttpStatusCode.ServiceUnavailable,
+            (int)HttpStatusCode.GatewayTimeout,
+        ];
+
+        return exception.StatusCode.HasValue && transientHttpStatusCodes.Contains(exception.StatusCode.Value);
     }
 }

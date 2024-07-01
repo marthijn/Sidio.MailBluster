@@ -4,7 +4,8 @@ using Sidio.MailBluster.Integration.Tests.Hooks;
 namespace Sidio.MailBluster.Integration.Tests.Steps;
 
 [Binding]
-public sealed class LeadsStepDefinitions
+[Scope(Scenario = "Create a lead")]
+public sealed class LeadCreateStepDefinitions
 {
     private readonly Fixture _fixture = new ();
     private readonly LeadExistsDriver _leadExistsDriver;
@@ -13,7 +14,7 @@ public sealed class LeadsStepDefinitions
 
     private string? _email;
 
-    public LeadsStepDefinitions(
+    public LeadCreateStepDefinitions(
         LeadExistsDriver leadExistsDriver,
         CreateLeadDriver createLeadDriver,
         ScenarioContext scenarioContext)
