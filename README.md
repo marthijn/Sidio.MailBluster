@@ -77,3 +77,6 @@ Integration tests are available in the `Sidio.MailBluster.Integration.Tests` pro
 
 # API Documentation
 - [MailBluster API](https://mailbluster.com/docs/api)
+
+# Disclaimer
+This package is not affiliated with MailBluster. Use at your own risk.
