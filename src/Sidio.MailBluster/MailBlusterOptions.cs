@@ -3,7 +3,7 @@
 /// <summary>
 /// The MailBluster options.
 /// </summary>
-public sealed record MailBlusterOptions
+public sealed class MailBlusterOptions
 {
     /// <summary>
     /// The config section name.
@@ -11,12 +11,12 @@ public sealed record MailBlusterOptions
     public const string SectionName = "MailBluster";
 
     /// <summary>
-    /// Gets the API base url.
+    /// Gets or sets the API base url.
     /// </summary>
-    public string Url { get; init; } = "https://api.mailbluster.com/api/";
+    public string Url { get; set; } = "https://api.mailbluster.com/api/";
 
     /// <summary>
-    /// Gets the API key.
+    /// Gets or sets the API key.
     /// </summary>
-    public required string ApiKey { get; init; }
+    public required string ApiKey { get; set; }
 }

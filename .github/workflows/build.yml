@@ -11,6 +11,7 @@ on:
 
 env:
   DOTNET_NOLOGO: true
+  MAILBLUSTER_API_KEY: ${{ secrets.MAILBLUSTER_API_KEY }}
 
 jobs:
   build:
