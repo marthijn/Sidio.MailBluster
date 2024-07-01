@@ -38,7 +38,7 @@ public abstract record LeadBase
     /// </summary>
     [JsonPropertyName("fields")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Fields? Fields { get; init; }
+    public LeadFields? Fields { get; init; }
 
     /// <summary>
     /// Gets the timezone.

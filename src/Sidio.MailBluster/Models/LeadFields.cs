@@ -1,9 +1,9 @@
 ﻿namespace Sidio.MailBluster.Models;
 
 /// <summary>
-/// The fields.
+/// The lead fields.
 /// </summary>
-public sealed class Fields : Dictionary<string, string>
+public sealed class LeadFields : Dictionary<string, string>
 {
     /// <summary>
     /// Adds a field.

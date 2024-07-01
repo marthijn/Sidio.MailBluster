@@ -11,7 +11,7 @@ public sealed partial class MailBlusterClientTests
         // arrange
         _httpTest.RespondWith(ReadJsonData("CreateResponse.json", "Leads"));
 
-        var fields = new Fields();
+        var fields = new LeadFields();
         fields.AddField(_fixture.Create<string>(), _fixture.Create<string>());
 
         var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();

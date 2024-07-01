@@ -40,4 +40,6 @@ public interface IMailBlusterClient
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="DeleteLeadResponse"/>,</returns>
     Task<DeleteLeadResponse> DeleteLeadAsync(string email, CancellationToken cancellationToken = default);
+
+
 }
