@@ -1,7 +1,7 @@
 ﻿using Sidio.MailBluster.Integration.Tests.Repositories;
 using Sidio.MailBluster.Models;
 
-namespace Sidio.MailBluster.Integration.Tests.Drivers;
+namespace Sidio.MailBluster.Integration.Tests.Drivers.Leads;
 
 [Binding]
 public sealed class LeadExistsDriver

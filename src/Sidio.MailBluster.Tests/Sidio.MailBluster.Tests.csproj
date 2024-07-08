@@ -43,6 +43,16 @@
       <EmbeddedResource Include="Json\Leads\UpdateResponse.json" />
       <None Remove="Json\Leads\CreateRequest.json" />
       <EmbeddedResource Include="Json\Leads\CreateRequest.json" />
+      <None Remove="Json\Fields\ReadResponse.json" />
+      <EmbeddedResource Include="Json\Fields\ReadResponse.json" />
+      <None Remove="Json\Fields\CreateFieldResponse.json" />
+      <EmbeddedResource Include="Json\Fields\CreateResponse.json" />
+      <None Remove="Json\Fields\DeleteResponse.json" />
+      <EmbeddedResource Include="Json\Fields\DeleteResponse.json" />
+      <None Remove="Json\Fields\UpdateFieldResponse.json" />
+      <EmbeddedResource Include="Json\Fields\UpdateResponse.json" />
+      <None Remove="Json\Errors\FeatureLocked.json" />
+      <EmbeddedResource Include="Json\Errors\FeatureLocked.json" />
     </ItemGroup>
 
 </Project>

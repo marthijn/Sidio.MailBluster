@@ -1,6 +1,6 @@
 ﻿using Sidio.MailBluster.Integration.Tests.Repositories;
 
-namespace Sidio.MailBluster.Integration.Tests.Drivers;
+namespace Sidio.MailBluster.Integration.Tests.Drivers.Leads;
 
 [Binding]
 public sealed class DeleteLeadDriver

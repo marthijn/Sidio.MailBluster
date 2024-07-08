@@ -1,14 +1,11 @@
 ﻿using Sidio.MailBluster.Integration.Tests.Repositories;
 using Sidio.MailBluster.Requests.Leads;
-using Xunit.Abstractions;
 
-namespace Sidio.MailBluster.Integration.Tests.Hooks;
+namespace Sidio.MailBluster.Integration.Tests.Hooks.Leads;
 
 [Binding]
 public sealed class CreateLeadHook
 {
-    internal const string ContextKey = "lead";
-
     private readonly Fixture _fixture = new ();
     private readonly LeadRepository _repository;
 
@@ -20,7 +17,7 @@ public sealed class CreateLeadHook
     [BeforeScenario("createLead")]
     public async Task CreateLeadAsync(ScenarioContext scenarioContext)
     {
-        var testOutputHelper = GetTestOutputHelper(scenarioContext);
+        var testOutputHelper = scenarioContext.GetTestOutputHelper();
         var email = $"{_fixture.Create<string>()}@example.com";
         var result = await _repository.CreateAsync(
             new CreateLeadRequest
@@ -33,10 +30,8 @@ public sealed class CreateLeadHook
         result.Lead.Should().NotBeNull();
         result.Lead!.Email.Should().Be(email);
 
-        testOutputHelper.WriteLine($"Created lead with email `{email}`");
+        testOutputHelper.WriteLine($"Created lead with email `{email}` and id `{result.Lead.Id}`");
 
-        scenarioContext.Set(result.Lead, ContextKey);
+        scenarioContext.SetLead(result.Lead);
     }
-
-    private static ITestOutputHelper GetTestOutputHelper(ScenarioContext scenarioContext) => scenarioContext.ScenarioContainer.Resolve<ITestOutputHelper>();
 }

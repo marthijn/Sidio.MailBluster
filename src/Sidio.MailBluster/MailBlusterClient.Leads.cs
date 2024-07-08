@@ -14,7 +14,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Creating lead {Request}", JsonSerializer.Serialize(request));
+            _logger.LogTrace("Creating lead: {Request}", JsonSerializer.Serialize(request));
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
@@ -23,7 +23,7 @@ public sealed partial class MailBlusterClient
 
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads)
-            .PostJsonAsync(request, cancellationToken: cancellationToken)
+            .PostJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<CreateLeadResponse>().ConfigureAwait(false);
         return result;
@@ -34,7 +34,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Get lead `{Email}`", email);
+            _logger.LogTrace("Get lead with Email `{Email}`", email);
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
@@ -44,7 +44,7 @@ public sealed partial class MailBlusterClient
         var response = await DefaultClient
             .AllowHttpStatus((int)HttpStatusCode.NotFound)
             .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
-            .GetAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (response.StatusCode < 300)
         {
@@ -64,7 +64,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Updating lead {Request}", JsonSerializer.Serialize(request));
+            _logger.LogTrace("Updating lead: {Request}", JsonSerializer.Serialize(request));
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
@@ -73,7 +73,7 @@ public sealed partial class MailBlusterClient
 
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
-            .PutJsonAsync(request, cancellationToken: cancellationToken)
+            .PutJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<UpdateLeadResponse>().ConfigureAwait(false);
         return result;
@@ -84,7 +84,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Delete lead `{Email}`", email);
+            _logger.LogTrace("Delete lead with Email `{Email}`", email);
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
@@ -94,7 +94,7 @@ public sealed partial class MailBlusterClient
         var md5 = CreateMd5Hash(email);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads, md5)
-            .DeleteAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         var result = await response.GetJsonAsync<DeleteLeadResponse>().ConfigureAwait(false);
         return result;
     }

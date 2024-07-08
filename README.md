@@ -75,6 +75,10 @@ Integration tests are available in the `Sidio.MailBluster.Integration.Tests` pro
 }
 ```
 
+## Note:
+- The integration tests will create, update and delete data in your MailBluster brand associated with the API key.
+- In order to run the tests for Fields, a pro account is required.
+
 # API Documentation
 - [MailBluster API](https://mailbluster.com/docs/api)
 

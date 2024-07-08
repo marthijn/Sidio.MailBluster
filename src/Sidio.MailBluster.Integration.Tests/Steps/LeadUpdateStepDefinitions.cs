@@ -1,6 +1,5 @@
-﻿using Sidio.MailBluster.Integration.Tests.Drivers;
+﻿using Sidio.MailBluster.Integration.Tests.Drivers.Leads;
 using Sidio.MailBluster.Integration.Tests.Hooks;
-using Sidio.MailBluster.Models;
 
 namespace Sidio.MailBluster.Integration.Tests.Steps;
 
@@ -31,7 +30,7 @@ public sealed class LeadUpdateStepDefinitions
     [Given(@"a lead exists")]
     public async Task GivenALeadExists()
     {
-        var lead = _scenarioContext.Get<Lead>(CreateLeadHook.ContextKey);
+        var lead = _scenarioContext.GetLead() ?? throw new InvalidOperationException("Lead is not set");
         await _leadExistsDriver.LeadShouldExistAsync(lead.Email);
         _email = lead.Email;
     }

@@ -2,7 +2,7 @@
 using Sidio.MailBluster.Models;
 using Sidio.MailBluster.Requests.Leads;
 
-namespace Sidio.MailBluster.Integration.Tests.Drivers;
+namespace Sidio.MailBluster.Integration.Tests.Drivers.Leads;
 
 [Binding]
 public sealed class UpdateLeadDriver

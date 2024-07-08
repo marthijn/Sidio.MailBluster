@@ -1,4 +1,4 @@
-﻿using Sidio.MailBluster.Integration.Tests.Drivers;
+﻿using Sidio.MailBluster.Integration.Tests.Drivers.Leads;
 using Sidio.MailBluster.Integration.Tests.Hooks;
 
 namespace Sidio.MailBluster.Integration.Tests.Steps;
@@ -30,7 +30,7 @@ public sealed class LeadCreateStepDefinitions
     public void BeforeScenario()
     {
         _email = $"{_fixture.Create<string>()}@example.com";
-        _scenarioContext.Set(_email, CleanupLeadHook.ContextKey);
+        _scenarioContext.SetLeadEmail(_email);
     }
 
     [Given(@"a lead does not exist")]

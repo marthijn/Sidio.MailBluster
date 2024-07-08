@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Flurl.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Retry;
@@ -27,7 +26,7 @@ public sealed class SetupTestDependencies
             _ =>
             {
                 var retryPolicy = Policy
-                    .Handle<FlurlHttpException>(IsTransientError)
+                    .Handle<MailBlusterHttpException>(IsTransientError)
                     .WaitAndRetryAsync(
                         3,
                         _ =>
@@ -38,7 +37,10 @@ public sealed class SetupTestDependencies
 
                 return retryPolicy;
             });
-        services.AddScoped<LeadRepository>();
+
+        services
+            .AddScoped<LeadRepository>()
+            .AddScoped<FieldRepository>();
 
         services.AddMailBluster(
             options => { options.ApiKey = mailBlusterApiKey; });
@@ -63,7 +65,7 @@ public sealed class SetupTestDependencies
         }
     }
 
-    private static bool IsTransientError(FlurlHttpException exception)
+    private static bool IsTransientError(MailBlusterHttpException exception)
     {
         int[] transientHttpStatusCodes =
         [

@@ -1,14 +1,11 @@
 ﻿using Sidio.MailBluster.Integration.Tests.Repositories;
-using Sidio.MailBluster.Models;
 using Xunit.Abstractions;
 
-namespace Sidio.MailBluster.Integration.Tests.Hooks;
+namespace Sidio.MailBluster.Integration.Tests.Hooks.Leads;
 
 [Binding]
 public sealed class CleanupLeadHook
 {
-    internal const string ContextKey = "lead-email";
-
     private readonly LeadRepository _repository;
 
     public CleanupLeadHook(LeadRepository repository)
@@ -19,15 +16,18 @@ public sealed class CleanupLeadHook
     [AfterScenario("cleanupLead")]
     public async Task CleanupAsync(ScenarioContext scenarioContext)
     {
-        var testOutputHelper = GetTestOutputHelper(scenarioContext);
+        var testOutputHelper = scenarioContext.GetTestOutputHelper();
 
         var deleteResult = false;
-        if (scenarioContext.TryGetValue(ContextKey, out string email) && !string.IsNullOrWhiteSpace(email))
+
+        var email = scenarioContext.GetLeadEmail();
+        if (!string.IsNullOrWhiteSpace(email))
         {
             deleteResult = await DeleteLead(email, testOutputHelper);
         }
 
-        if (scenarioContext.TryGetValue(CreateLeadHook.ContextKey, out Lead lead) && lead != null)
+        var lead = scenarioContext.GetLead();
+        if (lead != null)
         {
             deleteResult = await DeleteLead(lead.Email, testOutputHelper);
         }
@@ -44,6 +44,4 @@ public sealed class CleanupLeadHook
         testOutputHelper.WriteLine($"Trying to delete lead with email `{email}`: {result.Message}");
         return !string.IsNullOrWhiteSpace(result.LeadHash);
     }
-
-    private static ITestOutputHelper GetTestOutputHelper(ScenarioContext scenarioContext) => scenarioContext.ScenarioContainer.Resolve<ITestOutputHelper>();
 }

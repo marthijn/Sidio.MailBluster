@@ -1,11 +1,7 @@
-﻿using System.Net;
-using System.Text.Json;
-using Flurl.Http;
+﻿using Flurl.Http;
 using Flurl.Http.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Sidio.MailBluster.Requests.Leads;
-using Sidio.MailBluster.Responses.Leads;
 
 namespace Sidio.MailBluster;
 
