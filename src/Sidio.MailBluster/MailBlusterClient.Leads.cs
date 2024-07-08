@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
 using Sidio.MailBluster.Requests.Leads;
@@ -41,19 +40,21 @@ public sealed partial class MailBlusterClient
             _logger.LogDebug("Get lead with Email `{Email}`", email.ObfuscateEmailAddress());
         }
 
-        var response = await DefaultClient
-            .AllowHttpStatus((int)HttpStatusCode.NotFound)
-            .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
-            .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        if (response.StatusCode < 300)
+        IFlurlResponse? response = null;
+        try
         {
-            return await response.GetJsonAsync<GetLeadResponse>().ConfigureAwait(false);
+            response = await DefaultClient
+                .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
+                .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            if (response.StatusCode < 300)
+            {
+                return await response.GetJsonAsync<GetLeadResponse>().ConfigureAwait(false);
+            }
         }
-
-        if (response.StatusCode != 404)
+        catch (MailBlusterNoContentException)
         {
-            _logger.LogDebug("Response status code {StatusCode} for get lead `{Email}`", response.StatusCode, email.ObfuscateEmailAddress());
+            _logger.LogDebug("Response status code {StatusCode} for get lead `{Email}`", response?.StatusCode, email.ObfuscateEmailAddress());
         }
 
         return null;

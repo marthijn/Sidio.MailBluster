@@ -1,0 +1,8 @@
+{
+  "id": "Order ID is required",
+  "customer": "Customer is required",
+  "customer.email": "Email address is required",
+  "currency": "Currency is required",
+  "totalPrice": "Total price is required",
+  "items": "Items must be an array"
+}

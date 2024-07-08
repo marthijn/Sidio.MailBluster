@@ -29,6 +29,30 @@ public sealed partial class MailBlusterClientTests
     }
 
     [Fact]
+    public async Task CreateLeadAsync_UnprocessableEntity_ShouldReturnError()
+    {
+        // arrange
+        _httpTest.RespondWith(ReadJsonData("UnprocessableEntity.json", "Errors"), 422);
+
+        var fields = new LeadFields();
+        fields.AddField(_fixture.Create<string>(), _fixture.Create<string>());
+
+        var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();
+        var client = CreateClient();
+
+        // act
+        var action = () => client.CreateLeadAsync(request);
+
+        // assert
+        await action.Should().ThrowExactlyAsync<MailBlusterUnprocessableEntityException>()
+            .Where(
+                x => x.UnprocessableEntityResponse["id"] == "Order ID is required" &&
+                     x.UnprocessableEntityResponse["customer"] == "Customer is required");
+        _httpTest.ShouldHaveCalled($"*/leads").WithHeader("Authorization", _options.Value.ApiKey)
+            .WithContentType("application/json").WithRequestJson(request);
+    }
+
+    [Fact]
     public async Task UpdateLeadAsync_WhenLeadExists_ShouldReturnLead()
     {
         // arrange
@@ -80,10 +104,27 @@ public sealed partial class MailBlusterClientTests
     }
 
     [Fact]
+    public async Task GetLeadAsync_WhenApiEndpointDoesNotExist_ShouldReturnError()
+    {
+        // arrange
+        _httpTest.RespondWith(ReadJsonData("ApiEndpointDoesNotExist.json", "Errors"), 404);
+        const string RequestEmail = "noreply@sidio.nl";
+        const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
+        var client = CreateClient();
+
+        // act
+        var action = () => client.GetLeadAsync(RequestEmail);
+
+        // assert
+        await action.Should().ThrowExactlyAsync<MailBlusterHttpException>().Where(x => x.StatusCode == 404);
+        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
+    }
+
+    [Fact]
     public async Task GetLeadAsync_WhenLeadDoesNotExist_ShouldReturnNull()
     {
         // arrange
-        _httpTest.RespondWith(status: 404);
+        _httpTest.RespondWith(ReadJsonData("LeadNotFoundResponse.json", "Leads"), 404);
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var client = CreateClient();

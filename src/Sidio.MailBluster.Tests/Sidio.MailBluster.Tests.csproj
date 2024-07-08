@@ -53,6 +53,12 @@
       <EmbeddedResource Include="Json\Fields\UpdateResponse.json" />
       <None Remove="Json\Errors\FeatureLocked.json" />
       <EmbeddedResource Include="Json\Errors\FeatureLocked.json" />
+      <None Remove="Json\Errors\UnprocessableEntity.json" />
+      <EmbeddedResource Include="Json\Errors\UnprocessableEntity.json" />
+      <None Remove="Json\Errors\ApiEndpointDoesNotExist.json" />
+      <EmbeddedResource Include="Json\Errors\ApiEndpointDoesNotExist.json" />
+      <None Remove="Json\Leads\LeadNotFoundResponse.json" />
+      <EmbeddedResource Include="Json\Leads\LeadNotFoundResponse.json" />
     </ItemGroup>
 
 </Project>
