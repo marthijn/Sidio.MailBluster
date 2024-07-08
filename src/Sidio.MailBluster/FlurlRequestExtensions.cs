@@ -83,14 +83,14 @@ internal static class FlurlRequestExtensions
         if (httpException.StatusCode == (int) HttpStatusCode.NotFound)
         {
             var notFoundResponse = await httpException.GetResponseJsonAsync<MailBlusterResponse>().ConfigureAwait(false);
-            if (notFoundResponse?.Message != null && notFoundResponse.Message.Equals(
+            if (notFoundResponse?.Message != null && !notFoundResponse.Message.Equals(
                     "API endpoint does not exist",
                     StringComparison.OrdinalIgnoreCase))
             {
-                throw new MailBlusterHttpException(null, notFoundResponse.Message, httpException);
+                throw new MailBlusterNoContentException();
             }
 
-            throw new MailBlusterNoContentException();
+            throw new MailBlusterHttpException(null, notFoundResponse?.Message, httpException);
         }
 
         var errorResponse = await httpException.GetResponseJsonAsync<ErrorResponse>().ConfigureAwait(false);
