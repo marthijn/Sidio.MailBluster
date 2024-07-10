@@ -32,7 +32,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Get product with id `{Id}`", id);
+            _logger.LogDebug("Get product with id `{ProductId}`", id.Sanitize());
         }
 
         IFlurlResponse? response = null;
@@ -47,9 +47,9 @@ public sealed partial class MailBlusterClient
         catch (MailBlusterNoContentException)
         {
             _logger.LogDebug(
-                "Response status code {StatusCode} for get product with id `{Id}`",
+                "Response status code {StatusCode} for get product with id `{ProductId}`",
                 response?.StatusCode,
-                id);
+                id.Sanitize());
         }
 
         return null;
@@ -62,7 +62,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Creating product with id `{Id}`", request.Id);
+            _logger.LogDebug("Creating product with id `{ProductId}`", request.Id.Sanitize());
         }
 
         var response = await DefaultClient
@@ -78,7 +78,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Updating product with id `{Id}`", id);
+            _logger.LogDebug("Updating product with id `{ProductId}`", id.Sanitize());
         }
 
         var response = await DefaultClient
@@ -94,7 +94,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Deleting product with id `{Id}`", id);
+            _logger.LogDebug("Deleting product with id `{ProductId}`", id.Sanitize());
         }
 
         IFlurlResponse? response = null;
@@ -109,9 +109,9 @@ public sealed partial class MailBlusterClient
         catch (MailBlusterNoContentException ex)
         {
             _logger.LogDebug(
-                "Response status code {StatusCode} for delete product with id `{Id}`",
+                "Response status code {StatusCode} for delete product with id `{ProductId}`",
                 response?.StatusCode,
-                id);
+                id.Sanitize());
 
             return new DeleteProductResponse
             {

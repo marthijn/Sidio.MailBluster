@@ -27,7 +27,7 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Creating field with Label `{FieldLabel}`", request.FieldLabel);
+            _logger.LogDebug("Creating field with Label `{FieldLabel}`", request.FieldLabel.Sanitize());
         }
 
         var response = await DefaultClient
@@ -74,7 +74,7 @@ public sealed partial class MailBlusterClient
         catch (MailBlusterNoContentException ex)
         {
             _logger.LogDebug(
-                "Response status code {StatusCode} for delete field with id `{Id}`",
+                "Response status code {StatusCode} for delete field with id `{FieldId}`",
                 response?.StatusCode,
                 id);
 

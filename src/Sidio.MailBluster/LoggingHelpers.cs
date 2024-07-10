@@ -11,4 +11,14 @@ internal static class LoggingHelpers
 
         return $"{emailAddress[0]}***{emailAddress[(emailAddress.IndexOf('@') - 1)..]}";
     }
+
+    public static string? Sanitize(this string? input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return input;
+        }
+
+        return input.Trim().Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+    }
 }

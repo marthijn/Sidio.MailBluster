@@ -17,7 +17,7 @@ public sealed partial class MailBlusterClient
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Creating lead with Email `{Email}`", request.Email.ObfuscateEmailAddress());
+            _logger.LogDebug("Creating lead with Email `{Email}`", request.Email.Sanitize().ObfuscateEmailAddress());
         }
 
         var response = await DefaultClient
@@ -33,11 +33,11 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Get lead with Email `{Email}`", email);
+            _logger.LogTrace("Get lead with Email `{Email}`", email.Sanitize());
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Get lead with Email `{Email}`", email.ObfuscateEmailAddress());
+            _logger.LogDebug("Get lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
         }
 
         IFlurlResponse? response = null;
@@ -54,7 +54,7 @@ public sealed partial class MailBlusterClient
             _logger.LogDebug(
                 "Response status code {StatusCode} for get lead `{Email}`",
                 response?.StatusCode,
-                email.ObfuscateEmailAddress());
+                email.Sanitize().ObfuscateEmailAddress());
         }
 
         return null;
@@ -69,7 +69,7 @@ public sealed partial class MailBlusterClient
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Updating lead with Email `{Email}`", email.ObfuscateEmailAddress());
+            _logger.LogDebug("Updating lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
         }
 
         var response = await DefaultClient
@@ -85,11 +85,11 @@ public sealed partial class MailBlusterClient
     {
         if (_logger.IsEnabled(LogLevel.Trace))
         {
-            _logger.LogTrace("Delete lead with Email `{Email}`", email);
+            _logger.LogTrace("Delete lead with Email `{Email}`", email.Sanitize());
         }
         else if (_logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Delete lead with Email `{Email}`", email.ObfuscateEmailAddress());
+            _logger.LogDebug("Delete lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
         }
 
         IFlurlResponse? response = null;
@@ -107,7 +107,7 @@ public sealed partial class MailBlusterClient
             _logger.LogDebug(
                 "Response status code {StatusCode} for delete lead `{Email}`",
                 response?.StatusCode,
-                email.ObfuscateEmailAddress());
+                email.Sanitize().ObfuscateEmailAddress());
 
             return new DeleteLeadResponse
             {
