@@ -18,7 +18,7 @@ internal static class FlurlRequestExtensions
         }
         catch (FlurlHttpException httpException)
         {
-            return await HandleException(httpException).ConfigureAwait(false);
+            return await HandleExceptionAsync(httpException).ConfigureAwait(false);
         }
     }
 
@@ -34,7 +34,7 @@ internal static class FlurlRequestExtensions
         }
         catch (FlurlHttpException httpException)
         {
-            return await HandleException(httpException).ConfigureAwait(false);
+            return await HandleExceptionAsync(httpException).ConfigureAwait(false);
         }
     }
 
@@ -50,7 +50,7 @@ internal static class FlurlRequestExtensions
         }
         catch (FlurlHttpException httpException)
         {
-            return await HandleException(httpException).ConfigureAwait(false);
+            return await HandleExceptionAsync(httpException).ConfigureAwait(false);
         }
     }
 
@@ -65,12 +65,12 @@ internal static class FlurlRequestExtensions
         }
         catch (FlurlHttpException httpException)
         {
-            return await HandleException(httpException).ConfigureAwait(false);
+            return await HandleExceptionAsync(httpException).ConfigureAwait(false);
         }
     }
 
     [DoesNotReturn]
-    private static async Task<IFlurlResponse> HandleException(
+    private static async Task<IFlurlResponse> HandleExceptionAsync(
         FlurlHttpException httpException)
     {
         switch (httpException.StatusCode)
