@@ -47,14 +47,14 @@ public sealed partial class MailBlusterClient
                 .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
                 .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            if (response.StatusCode < 300)
-            {
-                return await response.GetJsonAsync<GetLeadResponse>().ConfigureAwait(false);
-            }
+            return await response.GetJsonAsync<GetLeadResponse>().ConfigureAwait(false);
         }
         catch (MailBlusterNoContentException)
         {
-            _logger.LogDebug("Response status code {StatusCode} for get lead `{Email}`", response?.StatusCode, email.ObfuscateEmailAddress());
+            _logger.LogDebug(
+                "Response status code {StatusCode} for get lead `{Email}`",
+                response?.StatusCode,
+                email.ObfuscateEmailAddress());
         }
 
         return null;
@@ -92,11 +92,27 @@ public sealed partial class MailBlusterClient
             _logger.LogDebug("Delete lead with Email `{Email}`", email.ObfuscateEmailAddress());
         }
 
-        var md5 = CreateMd5Hash(email);
-        var response = await DefaultClient
-            .Request(MailBlusterApiConstants.Leads, md5)
-            .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        var result = await response.GetJsonAsync<DeleteLeadResponse>().ConfigureAwait(false);
-        return result;
+        IFlurlResponse? response = null;
+        try
+        {
+            var md5 = CreateMd5Hash(email);
+            response = await DefaultClient
+                .Request(MailBlusterApiConstants.Leads, md5)
+                .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var result = await response.GetJsonAsync<DeleteLeadResponse>().ConfigureAwait(false);
+            return result;
+        }
+        catch (MailBlusterNoContentException ex)
+        {
+            _logger.LogDebug(
+                "Response status code {StatusCode} for delete lead `{Email}`",
+                response?.StatusCode,
+                email.ObfuscateEmailAddress());
+
+            return new DeleteLeadResponse
+            {
+                Message = ex.Message
+            };
+        }
     }
 }

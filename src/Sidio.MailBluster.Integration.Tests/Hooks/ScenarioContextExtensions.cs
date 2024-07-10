@@ -9,6 +9,8 @@ internal static class ScenarioContextExtensions
     private const string Lead = nameof(Lead);
     private const string FieldId = nameof(FieldId);
     private const string Field = nameof(Field);
+    private const string ProductId = nameof(ProductId);
+    private const string Product = nameof(Product);
 
     public static ITestOutputHelper GetTestOutputHelper(this ScenarioContext scenarioContext) => scenarioContext.ScenarioContainer.Resolve<ITestOutputHelper>();
 
@@ -39,4 +41,18 @@ internal static class ScenarioContextExtensions
     }
 
     public static Field? GetField(this ScenarioContext context) => context.TryGetValue(Field, out Field field) ? field : null;
+    
+    public static void SetProductId(this ScenarioContext context, string id)
+    {
+        context.Set(id, ProductId);
+    }
+
+    public static string? GetProductId(this ScenarioContext context) => context.TryGetValue(ProductId, out string? id) ? id : null;
+
+    public static void SetProduct(this ScenarioContext context, Product product)
+    {
+        context.Set(product, Product);
+    }
+
+    public static Product? GetProduct(this ScenarioContext context) => context.TryGetValue(Product, out Product product) ? product : null;
 }

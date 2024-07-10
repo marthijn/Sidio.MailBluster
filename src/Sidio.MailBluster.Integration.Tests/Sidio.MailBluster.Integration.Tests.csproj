@@ -33,6 +33,7 @@
     <ItemGroup>
       <Content Include="Features\Fields.feature" />
       <Content Include="Features\Leads.feature" />
+      <Content Include="Features\Products.feature" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,10 +44,6 @@
       <None Update="local.settings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Steps\Leads\" />
     </ItemGroup>
 
 </Project>

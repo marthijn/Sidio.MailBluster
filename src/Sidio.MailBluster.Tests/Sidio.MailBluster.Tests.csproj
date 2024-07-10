@@ -57,8 +57,22 @@
       <EmbeddedResource Include="Json\Errors\UnprocessableEntity.json" />
       <None Remove="Json\Errors\ApiEndpointDoesNotExist.json" />
       <EmbeddedResource Include="Json\Errors\ApiEndpointDoesNotExist.json" />
-      <None Remove="Json\Leads\LeadNotFoundResponse.json" />
-      <EmbeddedResource Include="Json\Leads\LeadNotFoundResponse.json" />
+      <None Remove="Json\Leads\NotFoundResponse.json" />
+      <EmbeddedResource Include="Json\Leads\NotFoundResponse.json" />
+      <None Remove="Json\Products\GetProductsResponse.json" />
+      <EmbeddedResource Include="Json\Products\GetProductsResponse.json" />
+      <None Remove="Json\Products\GetProductResponse.json" />
+      <EmbeddedResource Include="Json\Products\GetProductResponse.json" />
+      <None Remove="Json\Products\NotFoundResponse.json" />
+      <EmbeddedResource Include="Json\Products\NotFoundResponse.json" />
+      <None Remove="Json\Products\CreateResponse.json" />
+      <EmbeddedResource Include="Json\Products\CreateResponse.json" />
+      <None Remove="Json\Products\UpdateResponse.json" />
+      <EmbeddedResource Include="Json\Products\UpdateResponse.json" />
+      <None Remove="Json\Products\DeleteResponse.json" />
+      <EmbeddedResource Include="Json\Products\DeleteResponse.json" />
+      <None Remove="Json\Products\DeleteNotFoundResponse.json" />
+      <EmbeddedResource Include="Json\Products\DeleteNotFoundResponse.json" />
     </ItemGroup>
 
 </Project>

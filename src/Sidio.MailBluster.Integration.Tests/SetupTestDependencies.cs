@@ -40,7 +40,8 @@ public sealed class SetupTestDependencies
 
         services
             .AddScoped<LeadRepository>()
-            .AddScoped<FieldRepository>();
+            .AddScoped<FieldRepository>()
+            .AddScoped<ProductRepository>();
 
         services.AddMailBluster(
             options => { options.ApiKey = mailBlusterApiKey; });

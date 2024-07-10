@@ -1,0 +1,24 @@
+﻿{
+  "products": [
+    {
+      "id": "101",
+      "name": "Reign Html Template",
+      "createdAt": "2016-07-23T08:03:18.954Z",
+      "updatedAt": "2016-11-04T01:32:12.000Z"
+    },
+    {
+      "id": "102",
+      "name": "Slick HTML Template",
+      "createdAt": "2016-07-23T08:03:18.954Z",
+      "updatedAt": "2016-11-04T01:32:12.000Z"
+    }
+  ],
+  "meta": {
+    "total": 155,
+    "prevPageNo": null,
+    "pageNo": 1,
+    "nextPageNo": 2,
+    "perPage": 10,
+    "totalPage": 16
+  }
+}

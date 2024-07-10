@@ -1,7 +1,7 @@
 ﻿using Sidio.MailBluster.Integration.Tests.Drivers.Leads;
 using Sidio.MailBluster.Integration.Tests.Hooks;
 
-namespace Sidio.MailBluster.Integration.Tests.Steps;
+namespace Sidio.MailBluster.Integration.Tests.Steps.Leads;
 
 [Binding]
 [Scope(Scenario = "Delete a lead")]

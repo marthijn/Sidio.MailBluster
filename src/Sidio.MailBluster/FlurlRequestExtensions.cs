@@ -91,7 +91,7 @@ internal static class FlurlRequestExtensions
                         notFoundResponse.Message,
                         StringComparer.InvariantCultureIgnoreCase))
                 {
-                    throw new MailBlusterNoContentException();
+                    throw new MailBlusterNoContentException(notFoundResponse);
                 }
 
                 throw new MailBlusterHttpException(null, notFoundResponse?.Message, httpException);

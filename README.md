@@ -56,11 +56,11 @@ not to use trace logging in production environments.
     - [x] Read
     - [x] Update
     - [x] Delete
-- [ ] Manage products
-    - [ ] Create
-    - [ ] Read
-    - [ ] Update
-    - [ ] Delete
+- [x] Manage products
+    - [x] Create
+    - [x] Read
+    - [x] Update
+    - [x] Delete
 - [ ] Manage orders
     - [ ] Create
     - [ ] Read

@@ -1,7 +1,9 @@
 ﻿using Sidio.MailBluster.Requests.Fields;
 using Sidio.MailBluster.Requests.Leads;
+using Sidio.MailBluster.Requests.Products;
 using Sidio.MailBluster.Responses.Fields;
 using Sidio.MailBluster.Responses.Leads;
+using Sidio.MailBluster.Responses.Products;
 
 namespace Sidio.MailBluster;
 
@@ -44,7 +46,7 @@ public interface IMailBlusterClient
     Task<DeleteLeadResponse> DeleteLeadAsync(string email, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets all the fields.
+    /// List all fields.
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A <see cref="GetFieldsResponse"/>.</returns>
@@ -73,7 +75,7 @@ public interface IMailBlusterClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///Deletes a field.
+    /// Deletes a field.
     /// </summary>
     /// <param name="id">The id.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
@@ -81,4 +83,51 @@ public interface IMailBlusterClient
     Task<DeleteFieldResponse> DeleteFieldAsync(
         long id,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// List all products.
+    /// </summary>
+    /// <param name="perPage">The items per page (default 10).</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <param name="pageNo">The page number (default 1).</param>
+    /// <returns>A <see cref="GetProductsResponse"/>.</returns>
+    Task<GetProductsResponse> GetProductsAsync(int? pageNo = null, int? perPage = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get a product.
+    /// </summary>
+    /// <param name="id">The id.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="GetProductResponse"/>.</returns>
+    Task<GetProductResponse?> GetProductAsync(string id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create a product.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="CreateProductResponse"/>.</returns>
+    Task<CreateProductResponse> CreateProductAsync(
+        CreateProductRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Update a product.
+    /// </summary>
+    /// <param name="id">The id.</param>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="UpdateProductResponse"/>.</returns>
+    Task<UpdateProductResponse> UpdateProductAsync(
+        string id,
+        UpdateProductRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Delete a product.
+    /// </summary>
+    /// <param name="id">The id.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="DeleteFieldResponse"/>.</returns>
+    Task<DeleteProductResponse> DeleteProductAsync(string id, CancellationToken cancellationToken = default);
 }

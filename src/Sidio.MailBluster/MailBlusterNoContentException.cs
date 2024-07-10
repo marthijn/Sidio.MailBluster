@@ -1,3 +1,11 @@
-﻿namespace Sidio.MailBluster;
+﻿using Sidio.MailBluster.Responses;
 
-internal sealed class MailBlusterNoContentException : Exception;
+namespace Sidio.MailBluster;
+
+internal sealed class MailBlusterNoContentException : Exception
+{
+    public MailBlusterNoContentException(MailBlusterResponse response)
+        : base(response.Message)
+    {
+    }
+}

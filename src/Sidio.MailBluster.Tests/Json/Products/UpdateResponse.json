@@ -1,0 +1,9 @@
+﻿{
+  "message": "Product updated",
+  "product": {
+    "id": "101",
+    "name": "Reign PRO Html Template",
+    "createdAt": "2016-07-23T08:03:18.954Z",
+    "updatedAt": "2016-08-17T09:16:15.000Z"
+  }
+}

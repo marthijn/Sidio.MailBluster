@@ -16,5 +16,6 @@ public sealed class DeleteLeadDriver
     {
         var result = await _repository.DeleteAsync(email);
         result.Should().NotBeNull();
+        result.LeadHash.Should().NotBeNullOrWhiteSpace();
     }
 }

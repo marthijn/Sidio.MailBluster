@@ -124,7 +124,7 @@ public sealed partial class MailBlusterClientTests
     public async Task GetLeadAsync_WhenLeadDoesNotExist_ShouldReturnNull()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("LeadNotFoundResponse.json", "Leads"), 404);
+        _httpTest.RespondWith(ReadJsonData("NotFoundResponse.json", "Leads"), 404);
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var client = CreateClient();

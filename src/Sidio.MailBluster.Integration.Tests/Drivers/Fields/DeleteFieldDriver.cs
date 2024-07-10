@@ -16,5 +16,6 @@ public sealed class DeleteFieldDriver
     {
         var result = await _repository.DeleteAsync(id);
         result.Should().NotBeNull();
+        result.Id.Should().Be(id);
     }
 }

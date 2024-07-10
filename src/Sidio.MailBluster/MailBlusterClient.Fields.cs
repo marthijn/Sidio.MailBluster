@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Flurl.Http;
+﻿using Flurl.Http;
 using Microsoft.Extensions.Logging;
 using Sidio.MailBluster.Requests.Fields;
 using Sidio.MailBluster.Responses.Fields;
@@ -17,7 +16,6 @@ public sealed partial class MailBlusterClient
         }
 
         var response = await DefaultClient
-            .AllowHttpStatus((int)HttpStatusCode.NotFound)
             .Request(MailBlusterApiConstants.Fields)
             .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -64,10 +62,26 @@ public sealed partial class MailBlusterClient
             _logger.LogDebug("Delete field with id `{FieldId}`", id);
         }
 
-        var response = await DefaultClient
-            .Request(MailBlusterApiConstants.Fields, id.ToString())
-            .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        var result = await response.GetJsonAsync<DeleteFieldResponse>().ConfigureAwait(false);
-        return result;
+        IFlurlResponse? response = null;
+        try
+        {
+            response = await DefaultClient
+                .Request(MailBlusterApiConstants.Fields, id.ToString())
+                .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var result = await response.GetJsonAsync<DeleteFieldResponse>().ConfigureAwait(false);
+            return result;
+        }
+        catch (MailBlusterNoContentException ex)
+        {
+            _logger.LogDebug(
+                "Response status code {StatusCode} for delete field with id `{Id}`",
+                response?.StatusCode,
+                id);
+
+            return new DeleteFieldResponse
+            {
+                Message = ex.Message
+            };
+        }
     }
 }
