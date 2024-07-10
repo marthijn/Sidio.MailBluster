@@ -5,6 +5,7 @@ namespace Sidio.MailBluster.Integration.Tests.Steps.Fields;
 
 [Binding]
 [Scope(Scenario = "Create a field")]
+[Collection("ReqnrollNonParallelizableFeatures")]
 public sealed class FieldCreateStepDefinitions
 {
     private readonly FieldExistsDriver _fieldExistsDriver;

@@ -5,6 +5,7 @@ namespace Sidio.MailBluster.Integration.Tests.Steps.Leads;
 
 [Binding]
 [Scope(Scenario = "Create a lead")]
+[Collection("ReqnrollNonParallelizableFeatures")]
 public sealed class LeadCreateStepDefinitions
 {
     private readonly Fixture _fixture = new ();

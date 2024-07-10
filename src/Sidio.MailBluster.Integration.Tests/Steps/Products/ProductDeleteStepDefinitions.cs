@@ -6,6 +6,7 @@ namespace Sidio.MailBluster.Integration.Tests.Steps.Products;
 
 [Binding]
 [Scope(Scenario = "Delete a product")]
+[Collection("ReqnrollNonParallelizableFeatures")]
 public sealed class ProductDeleteStepDefinitions
 {
     private readonly DeleteProductDriver _deleteProductDriver;

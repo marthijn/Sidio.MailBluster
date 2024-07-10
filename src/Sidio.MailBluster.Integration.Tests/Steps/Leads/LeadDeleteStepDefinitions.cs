@@ -5,6 +5,7 @@ namespace Sidio.MailBluster.Integration.Tests.Steps.Leads;
 
 [Binding]
 [Scope(Scenario = "Delete a lead")]
+[Collection("ReqnrollNonParallelizableFeatures")]
 public sealed class LeadDeleteStepDefinitions
 {
     private readonly DeleteLeadDriver _deleteLeadDriver;

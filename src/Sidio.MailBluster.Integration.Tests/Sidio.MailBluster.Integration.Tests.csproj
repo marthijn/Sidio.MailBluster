@@ -12,6 +12,7 @@
         <Using Include="Reqnroll"/>
         <Using Include="FluentAssertions"/>
         <Using Include="AutoFixture"/>
+        <Using Include="Xunit"/>
     </ItemGroup>
 
     <ItemGroup>

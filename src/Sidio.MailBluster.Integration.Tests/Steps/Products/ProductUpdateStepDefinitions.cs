@@ -7,6 +7,7 @@ namespace Sidio.MailBluster.Integration.Tests.Steps.Products;
 
 [Binding]
 [Scope(Scenario = "Update a product")]
+[Collection("ReqnrollNonParallelizableFeatures")]
 public sealed class ProductUpdateStepDefinitions
 {
     private readonly ProductExistsDriver _productExistsDriver;

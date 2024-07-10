@@ -6,6 +6,7 @@ namespace Sidio.MailBluster.Integration.Tests.Steps.Fields;
 
 [Binding]
 [Scope(Scenario = "Delete a field")]
+[Collection("ReqnrollNonParallelizableFeatures")]
 public sealed class FieldDeleteStepDefinitions
 {
     private readonly DeleteFieldDriver _deleteFieldDriver;
