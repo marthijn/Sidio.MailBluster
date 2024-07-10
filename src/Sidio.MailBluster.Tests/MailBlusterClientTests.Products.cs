@@ -141,6 +141,7 @@ public sealed partial class MailBlusterClientTests
         response.Should().NotBeNull();
         response.Id.Should().Be("101");
         response.Message.Should().Be("Product deleted");
+        response.Success.Should().BeTrue();
         _httpTest.ShouldHaveCalled($"*/products/{id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
@@ -159,6 +160,7 @@ public sealed partial class MailBlusterClientTests
         response.Should().NotBeNull();
         response.Id.Should().BeNullOrEmpty();
         response.Message.Should().Be("Product not found");
+        response.Success.Should().BeFalse();
         _httpTest.ShouldHaveCalled($"*/products/{id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 }

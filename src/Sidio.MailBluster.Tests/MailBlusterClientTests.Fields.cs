@@ -101,6 +101,7 @@ public sealed partial class MailBlusterClientTests
         response.Should().NotBeNull();
         response.Id.Should().Be(Id);
         response.Message.Should().Be("Field deleted");
+        response.Success.Should().BeTrue();
         _httpTest.ShouldHaveCalled($"*/fields/{Id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 }

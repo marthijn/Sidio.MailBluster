@@ -153,6 +153,7 @@ public sealed partial class MailBlusterClientTests
         response.Should().NotBeNull();
         response.LeadHash.Should().Be("5a91f0b2d2c1e5c3229d906d978b7337");
         response.Message.Should().Be("Lead deleted");
+        response.Success.Should().BeTrue();
         _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 }
