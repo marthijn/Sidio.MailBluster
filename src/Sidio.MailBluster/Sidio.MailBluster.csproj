@@ -16,6 +16,7 @@
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <Deterministic>true</Deterministic>
+        <PackageReleaseNotes>https://github.com/marthijn/Sidio.MailBluster/releases</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
