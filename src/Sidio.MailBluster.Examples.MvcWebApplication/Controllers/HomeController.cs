@@ -8,12 +8,10 @@ namespace Sidio.MailBluster.Examples.MvcWebApplication.Controllers;
 public class HomeController : Controller
 {
     private readonly MailBlusterService _service;
-    private readonly ILogger<HomeController> _logger;
 
-    public HomeController(MailBlusterService service, ILogger<HomeController> logger)
+    public HomeController(MailBlusterService service)
     {
         _service = service;
-        _logger = logger;
     }
 
     public IActionResult Index()

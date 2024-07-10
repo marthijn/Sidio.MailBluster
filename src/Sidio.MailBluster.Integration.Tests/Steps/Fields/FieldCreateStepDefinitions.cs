@@ -7,12 +7,12 @@ namespace Sidio.MailBluster.Integration.Tests.Steps.Fields;
 [Scope(Scenario = "Create a field")]
 public sealed class FieldCreateStepDefinitions
 {
-    private readonly Fixture _fixture = new ();
     private readonly FieldExistsDriver _fieldExistsDriver;
     private readonly CreateFieldDriver _createFieldDriver;
     private readonly ScenarioContext _scenarioContext;
 
     private string? _label;
+
     public FieldCreateStepDefinitions(
         FieldExistsDriver fieldExistsDriver,
         CreateFieldDriver createFieldDriver,
@@ -28,7 +28,8 @@ public sealed class FieldCreateStepDefinitions
     [BeforeScenario]
     public void BeforeScenario()
     {
-        _label = _fixture.Create<string>();
+        // Field merge tag can contain letter, number & underscore only
+        _label = FieldHelper.CreateValidFieldLabel();
     }
 
     [Given(@"a field does not exist")]

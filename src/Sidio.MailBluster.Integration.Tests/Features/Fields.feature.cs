@@ -86,18 +86,17 @@ namespace Sidio.MailBluster.Integration.Tests.Features
             await this.TestTearDownAsync();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Create a field", Skip="Ignored")]
+        [Xunit.SkippableFactAttribute(DisplayName="Create a field")]
         [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for fields")]
         [Xunit.TraitAttribute("Description", "Create a field")]
         [Xunit.TraitAttribute("Category", "cleanupField")]
         public async System.Threading.Tasks.Task CreateAField()
         {
             string[] tagsOfScenario = new string[] {
-                    "ignore",
                     "cleanupField"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create a field", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 5
+#line 4
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -107,14 +106,82 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 6
+#line 5
     await testRunner.GivenAsync("a field does not exist", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 7
+#line 6
     await testRunner.WhenAsync("the field is created", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 8
+#line 7
     await testRunner.ThenAsync("the field should exist", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Update a field")]
+        [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for fields")]
+        [Xunit.TraitAttribute("Description", "Update a field")]
+        [Xunit.TraitAttribute("Category", "createField")]
+        [Xunit.TraitAttribute("Category", "cleanupField")]
+        public async System.Threading.Tasks.Task UpdateAField()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "createField",
+                    "cleanupField"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Update a field", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 11
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 12
+    await testRunner.GivenAsync("a field exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 13
+    await testRunner.WhenAsync("the field is updated", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 14
+    await testRunner.ThenAsync("the field should be updated", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="Delete a field")]
+        [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for fields")]
+        [Xunit.TraitAttribute("Description", "Delete a field")]
+        [Xunit.TraitAttribute("Category", "createField")]
+        public async System.Threading.Tasks.Task DeleteAField()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "createField"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete a field", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 17
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 18
+    await testRunner.GivenAsync("a field exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 19
+    await testRunner.WhenAsync("the field is deleted", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 20
+    await testRunner.ThenAsync("the field should not exist", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

@@ -60,11 +60,24 @@ public interface IMailBlusterClient
         CreateFieldRequest request,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Updates a field.
+    /// </summary>
+    /// <param name="id">The id.</param>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="UpdateFieldResponse"/>.</returns>
     Task<UpdateFieldResponse> UpdateFieldAsync(
         long id,
         UpdateFieldRequest request,
         CancellationToken cancellationToken = default);
 
+    /// <summary>
+    ///Deletes a field.
+    /// </summary>
+    /// <param name="id">The id.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="DeleteFieldResponse"/>.</returns>
     Task<DeleteFieldResponse> DeleteFieldAsync(
         long id,
         CancellationToken cancellationToken = default);

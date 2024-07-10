@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+﻿using Sidio.MailBluster.Integration.Tests.Drivers.Fields;
+using Sidio.MailBluster.Integration.Tests.Repositories;
 using Sidio.MailBluster.Requests.Fields;
 
 namespace Sidio.MailBluster.Integration.Tests.Hooks.Fields;
@@ -6,7 +7,6 @@ namespace Sidio.MailBluster.Integration.Tests.Hooks.Fields;
 [Binding]
 public sealed class CreateFieldHook
 {
-    private readonly Fixture _fixture = new ();
     private readonly FieldRepository _repository;
 
     public CreateFieldHook(FieldRepository repository)
@@ -18,7 +18,7 @@ public sealed class CreateFieldHook
     public async Task CreateFieldAsync(ScenarioContext scenarioContext)
     {
         var testOutputHelper = scenarioContext.GetTestOutputHelper();
-        var label = _fixture.Create<string>();
+        var label = FieldHelper.CreateValidFieldLabel();
         var result = await _repository.CreateAsync(
             new CreateFieldRequest
             {

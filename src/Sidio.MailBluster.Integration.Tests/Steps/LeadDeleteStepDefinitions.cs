@@ -28,7 +28,7 @@ public sealed class LeadDeleteStepDefinitions
     [Given(@"a lead exists")]
     public async Task GivenALeadExists()
     {
-        var lead = _scenarioContext.GetLead() ?? throw new InvalidOperationException("Lead is not set");
+        var lead = _scenarioContext.GetLead() ?? throw new InvalidOperationException("Lead is not set in scenario context");
         await _leadExistsDriver.LeadShouldExistAsync(lead.Email);
         _email = lead.Email;
     }

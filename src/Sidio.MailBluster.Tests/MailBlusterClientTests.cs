@@ -3,8 +3,6 @@ using Flurl.Http.Configuration;
 using Flurl.Http.Testing;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Sidio.MailBluster.Models;
-using Sidio.MailBluster.Requests.Leads;
 
 namespace Sidio.MailBluster.Tests;
 

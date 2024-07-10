@@ -51,11 +51,11 @@ not to use trace logging in production environments.
   - [x] Read
   - [x] Update
   - [x] Delete
-- [ ] Manage fields
-    - [ ] Create
-    - [ ] Read
-    - [ ] Update
-    - [ ] Delete
+- [x] Manage fields
+    - [x] Create
+    - [x] Read
+    - [x] Update
+    - [x] Delete
 - [ ] Manage products
     - [ ] Create
     - [ ] Read
@@ -84,3 +84,6 @@ Integration tests are available in the `Sidio.MailBluster.Integration.Tests` pro
 
 # Disclaimer
 This package is not affiliated with MailBluster. Use at your own risk.
+
+# Sponsors
+Many thanks to [MailBluster](https://mailbluster.com/) for providing us with a pro account.
