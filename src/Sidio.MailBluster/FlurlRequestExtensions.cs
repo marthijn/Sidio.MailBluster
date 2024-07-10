@@ -73,27 +73,34 @@ internal static class FlurlRequestExtensions
     private static async Task<IFlurlResponse> HandleException(
         FlurlHttpException httpException)
     {
-        if (httpException.StatusCode == (int)HttpStatusCode.UnprocessableEntity)
+        switch (httpException.StatusCode)
         {
-            var entities = await httpException.GetResponseJsonAsync<UnprocessableEntityResponse>()
-                .ConfigureAwait(false);
-            throw new MailBlusterUnprocessableEntityException(entities, httpException);
-        }
-
-        if (httpException.StatusCode == (int) HttpStatusCode.NotFound)
-        {
-            var notFoundResponse = await httpException.GetResponseJsonAsync<MailBlusterResponse>().ConfigureAwait(false);
-            if (notFoundResponse?.Message != null && !notFoundResponse.Message.Equals(
-                    "API endpoint does not exist",
-                    StringComparison.OrdinalIgnoreCase))
+            // handle 422
+            case (int)HttpStatusCode.UnprocessableEntity:
             {
-                throw new MailBlusterNoContentException();
+                var entities = await httpException.GetResponseJsonAsync<UnprocessableEntityResponse>()
+                    .ConfigureAwait(false);
+                throw new MailBlusterUnprocessableEntityException(entities, httpException);
             }
 
-            throw new MailBlusterHttpException(null, notFoundResponse?.Message, httpException);
-        }
+            // handle 404 error responses. when an entity is not found the client should return null instead of an exception.
+            case (int)HttpStatusCode.NotFound:
+            {
+                var notFoundResponse = await httpException.GetResponseJsonAsync<MailBlusterResponse>().ConfigureAwait(false);
+                if (notFoundResponse?.Message != null && MailBlusterApiConstants.NoContentResponseMessages.Contains(
+                        notFoundResponse.Message,
+                        StringComparer.InvariantCultureIgnoreCase))
+                {
+                    throw new MailBlusterNoContentException();
+                }
 
-        var errorResponse = await httpException.GetResponseJsonAsync<ErrorResponse>().ConfigureAwait(false);
-        throw new MailBlusterHttpException(errorResponse.Code, errorResponse.Message, httpException);
+                throw new MailBlusterHttpException(null, notFoundResponse?.Message, httpException);
+            }
+            default:
+            {
+                var errorResponse = await httpException.GetResponseJsonAsync<ErrorResponse>().ConfigureAwait(false);
+                throw new MailBlusterHttpException(errorResponse.Code, errorResponse.Message, httpException);
+            }
+        }
     }
 }
