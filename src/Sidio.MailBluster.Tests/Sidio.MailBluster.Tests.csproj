@@ -73,6 +73,10 @@
       <EmbeddedResource Include="Json\Products\DeleteResponse.json" />
       <None Remove="Json\Products\DeleteNotFoundResponse.json" />
       <EmbeddedResource Include="Json\Products\DeleteNotFoundResponse.json" />
+      <None Remove="Json\Leads\DeleteNotFoundResponse.json" />
+      <EmbeddedResource Include="Json\Leads\DeleteNotFoundResponse.json" />
+      <None Remove="Json\Fields\DeleteNotFoundResponse.json" />
+      <EmbeddedResource Include="Json\Fields\DeleteNotFoundResponse.json" />
     </ItemGroup>
 
 </Project>

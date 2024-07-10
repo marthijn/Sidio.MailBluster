@@ -104,4 +104,23 @@ public sealed partial class MailBlusterClientTests
         response.Success.Should().BeTrue();
         _httpTest.ShouldHaveCalled($"*/fields/{Id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
+
+    [Fact]
+    public async Task DeleteFieldAsync_WhenFieldDoesNotExist_ShouldReturnSuccessWithEmptyId()
+    {
+        // arrange
+        _httpTest.RespondWith(ReadJsonData("DeleteNotFoundResponse.json", "Fields"), 404);
+        var id = _fixture.Create<long>();
+        var client = CreateClient();
+
+        // act
+        var response = await client.DeleteFieldAsync(id);
+
+        // assert
+        response.Should().NotBeNull();
+        response.Id.Should().BeNull();
+        response.Message.Should().Be("Field not found");
+        response.Success.Should().BeFalse();
+        _httpTest.ShouldHaveCalled($"*/fields/{id}").WithHeader("Authorization", _options.Value.ApiKey);
+    }
 }

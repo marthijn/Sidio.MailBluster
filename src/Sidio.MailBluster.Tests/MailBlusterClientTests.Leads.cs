@@ -156,4 +156,24 @@ public sealed partial class MailBlusterClientTests
         response.Success.Should().BeTrue();
         _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
     }
+
+    [Fact]
+    public async Task DeleteLeadAsync_WhenLeadDoesNotExist_ShouldReturnSuccessWithEmptyId()
+    {
+        // arrange
+        const string RequestEmail = "noreply@sidio.nl";
+        const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
+        _httpTest.RespondWith(ReadJsonData("DeleteNotFoundResponse.json", "Leads"), 404);
+        var client = CreateClient();
+
+        // act
+        var response = await client.DeleteLeadAsync(RequestEmail);
+
+        // assert
+        response.Should().NotBeNull();
+        response.LeadHash.Should().BeNullOrEmpty();
+        response.Message.Should().Be("Lead not found");
+        response.Success.Should().BeFalse();
+        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
+    }
 }
