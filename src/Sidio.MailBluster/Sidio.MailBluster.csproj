@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <Authors>Marthijn van den Heuvel,Sidio</Authors>
-        <Copyright>Copyright (c) Marthijn van den Heuvel 2024.</Copyright>
+        <Copyright>Copyright (c) 2024 Marthijn van den Heuvel</Copyright>
         <PackageId>Sidio.MailBluster</PackageId>
         <RepositoryUrl>https://github.com/marthijn/Sidio.MailBluster/</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

@@ -1,7 +1,8 @@
 Sidio.MailBluster
 =============
-Sidio.MailBluster is an unofficial C# SDK for the [MailBluster](https://mailbluster.com) API. Currently this package is not feature complete,
-and not released as a stable version. Please use at your own risk.
+Sidio.MailBluster is an unofficial C# SDK for the [MailBluster](https://mailbluster.com) API. This package is not yet fully feature complete,
+see the feature status below. If you encounter any issues or have recommendations, feel free to create an issue or a 
+pull request.
 
 [![build](https://github.com/marthijn/Sidio.MailBluster/actions/workflows/build.yml/badge.svg)](https://github.com/marthijn/Sidio.MailBluster/actions/workflows/build.yml)
 [![NuGet Version](https://img.shields.io/nuget/v/Sidio.MailBluster)](https://www.nuget.org/packages/Sidio.MailBluster/)
@@ -68,7 +69,8 @@ not to use trace logging in production environments.
     - [ ] Delete
 
 # Integration tests
-Integration tests are available in the `Sidio.MailBluster.Integration.Tests` project. To run the tests, add the following configuration file `local.settings.json`:
+Integration tests are available in the `Sidio.MailBluster.Integration.Tests` project. To run the tests, 
+add the following configuration file `local.settings.json`:
 ```json
 {
   "MAILBLUSTER_API_KEY": "your-api-key"
@@ -83,7 +85,9 @@ Integration tests are available in the `Sidio.MailBluster.Integration.Tests` pro
 - [MailBluster API](https://mailbluster.com/docs/api)
 
 # Disclaimer
-This package is not affiliated with MailBluster. Use at your own risk.
+This package is not affiliated with MailBluster. Although we try to cover the API as much as possible using unit- 
+and integration testing, we cannot guarantee that all features or error states have been implemented.
+Please use at your own risk.
 
 # Sponsors
 Many thanks to [MailBluster](https://mailbluster.com/) for providing us with a pro account.
