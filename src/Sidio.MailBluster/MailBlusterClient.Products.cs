@@ -13,7 +13,7 @@ public sealed partial class MailBlusterClient
         int? perPage = null,
         CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Get all products");
         }
@@ -30,7 +30,7 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<GetProductResponse?> GetProductAsync(string id, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Get product with id `{ProductId}`", id.Sanitize());
         }
@@ -46,10 +46,13 @@ public sealed partial class MailBlusterClient
         }
         catch (MailBlusterNoContentException)
         {
-            _logger.LogDebug(
-                "Response status code {StatusCode} for get product with id `{ProductId}`",
-                response?.StatusCode,
-                id.Sanitize());
+            if (DebugLogEnabled)
+            {
+                _logger.LogDebug(
+                    "Response status code {StatusCode} for get product with id `{ProductId}`",
+                    response?.StatusCode,
+                    id.Sanitize());
+            }
         }
 
         return null;
@@ -60,7 +63,7 @@ public sealed partial class MailBlusterClient
         CreateProductRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Creating product with id `{ProductId}`", request.Id.Sanitize());
         }
@@ -76,7 +79,7 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<UpdateProductResponse> UpdateProductAsync(string id, UpdateProductRequest request, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Updating product with id `{ProductId}`", id.Sanitize());
         }
@@ -92,7 +95,7 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<DeleteProductResponse> DeleteProductAsync(string id, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Deleting product with id `{ProductId}`", id.Sanitize());
         }
@@ -108,10 +111,13 @@ public sealed partial class MailBlusterClient
         }
         catch (MailBlusterNoContentException ex)
         {
-            _logger.LogDebug(
-                "Response status code {StatusCode} for delete product with id `{ProductId}`",
-                response?.StatusCode,
-                id.Sanitize());
+            if (DebugLogEnabled)
+            {
+                _logger.LogDebug(
+                    "Response status code {StatusCode} for delete product with id `{ProductId}`",
+                    response?.StatusCode,
+                    id.Sanitize());
+            }
 
             return new DeleteProductResponse
             {

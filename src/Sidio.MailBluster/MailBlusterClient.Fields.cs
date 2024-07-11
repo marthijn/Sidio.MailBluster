@@ -10,7 +10,7 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<GetFieldsResponse> GetFieldsAsync(CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Get all fields");
         }
@@ -25,7 +25,7 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<CreateFieldResponse> CreateFieldAsync(CreateFieldRequest request, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Creating field with Label `{FieldLabel}`", request.FieldLabel.Sanitize());
         }
@@ -41,7 +41,7 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<UpdateFieldResponse> UpdateFieldAsync(long id, UpdateFieldRequest request, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Updating field with id `{FieldId}`", id);
         }
@@ -57,7 +57,7 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<DeleteFieldResponse> DeleteFieldAsync(long id, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Debug))
+        if (DebugLogEnabled)
         {
             _logger.LogDebug("Delete field with id `{FieldId}`", id);
         }
@@ -73,10 +73,13 @@ public sealed partial class MailBlusterClient
         }
         catch (MailBlusterNoContentException ex)
         {
-            _logger.LogDebug(
-                "Response status code {StatusCode} for delete field with id `{FieldId}`",
-                response?.StatusCode,
-                id);
+            if (DebugLogEnabled)
+            {
+                _logger.LogDebug(
+                    "Response status code {StatusCode} for delete field with id `{FieldId}`",
+                    response?.StatusCode,
+                    id);
+            }
 
             return new DeleteFieldResponse
             {

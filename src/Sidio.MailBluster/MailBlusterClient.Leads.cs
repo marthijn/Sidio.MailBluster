@@ -11,11 +11,11 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<CreateLeadResponse> CreateLeadAsync(CreateLeadRequest request, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Trace))
+        if (TraceLogEnabled)
         {
             _logger.LogTrace("Creating lead: {Request}", JsonSerializer.Serialize(request));
         }
-        else if (_logger.IsEnabled(LogLevel.Debug))
+        else if (DebugLogEnabled)
         {
             _logger.LogDebug("Creating lead with Email `{Email}`", request.Email.Sanitize().ObfuscateEmailAddress());
         }
@@ -31,11 +31,11 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<GetLeadResponse?> GetLeadAsync(string email, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Trace))
+        if (TraceLogEnabled)
         {
             _logger.LogTrace("Get lead with Email `{Email}`", email.Sanitize());
         }
-        else if (_logger.IsEnabled(LogLevel.Debug))
+        else if (DebugLogEnabled)
         {
             _logger.LogDebug("Get lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
         }
@@ -51,10 +51,13 @@ public sealed partial class MailBlusterClient
         }
         catch (MailBlusterNoContentException)
         {
-            _logger.LogDebug(
-                "Response status code {StatusCode} for get lead `{Email}`",
-                response?.StatusCode,
-                email.Sanitize().ObfuscateEmailAddress());
+            if (DebugLogEnabled)
+            {
+                _logger.LogDebug(
+                    "Response status code {StatusCode} for get lead `{Email}`",
+                    response?.StatusCode,
+                    email.Sanitize().ObfuscateEmailAddress());
+            }
         }
 
         return null;
@@ -63,11 +66,11 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<UpdateLeadResponse> UpdateLeadAsync(string email, UpdateLeadRequest request, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Trace))
+        if (TraceLogEnabled)
         {
             _logger.LogTrace("Updating lead: {Request}", JsonSerializer.Serialize(request));
         }
-        else if (_logger.IsEnabled(LogLevel.Debug))
+        else if (DebugLogEnabled)
         {
             _logger.LogDebug("Updating lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
         }
@@ -83,11 +86,11 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<DeleteLeadResponse> DeleteLeadAsync(string email, CancellationToken cancellationToken = default)
     {
-        if (_logger.IsEnabled(LogLevel.Trace))
+        if (TraceLogEnabled)
         {
             _logger.LogTrace("Delete lead with Email `{Email}`", email.Sanitize());
         }
-        else if (_logger.IsEnabled(LogLevel.Debug))
+        else if (DebugLogEnabled)
         {
             _logger.LogDebug("Delete lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
         }
@@ -104,10 +107,13 @@ public sealed partial class MailBlusterClient
         }
         catch (MailBlusterNoContentException ex)
         {
-            _logger.LogDebug(
-                "Response status code {StatusCode} for delete lead `{Email}`",
-                response?.StatusCode,
-                email.Sanitize().ObfuscateEmailAddress());
+            if (DebugLogEnabled)
+            {
+                _logger.LogDebug(
+                    "Response status code {StatusCode} for delete lead `{Email}`",
+                    response?.StatusCode,
+                    email.Sanitize().ObfuscateEmailAddress());
+            }
 
             return new DeleteLeadResponse
             {
