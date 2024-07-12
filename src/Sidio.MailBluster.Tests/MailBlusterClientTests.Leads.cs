@@ -1,5 +1,4 @@
-﻿using Sidio.MailBluster.Models;
-using Sidio.MailBluster.Requests.Leads;
+﻿using Sidio.MailBluster.Requests.Leads;
 
 namespace Sidio.MailBluster.Tests;
 
@@ -11,8 +10,7 @@ public sealed partial class MailBlusterClientTests
         // arrange
         _httpTest.RespondWith(ReadJsonData("CreateResponse.json", "Leads"));
 
-        var fields = new LeadFields();
-        fields.AddField(_fixture.Create<string>(), _fixture.Create<string>());
+        var fields = new Dictionary<string, string> {{_fixture.Create<string>(), _fixture.Create<string>()}};
 
         var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();
         var client = CreateClient();
@@ -34,8 +32,7 @@ public sealed partial class MailBlusterClientTests
         // arrange
         _httpTest.RespondWith(ReadJsonData("UnprocessableEntity.json", "Errors"), 422);
 
-        var fields = new LeadFields();
-        fields.AddField(_fixture.Create<string>(), _fixture.Create<string>());
+        var fields = new Dictionary<string, string> {{_fixture.Create<string>(), _fixture.Create<string>()}};
 
         var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();
         var client = CreateClient();
