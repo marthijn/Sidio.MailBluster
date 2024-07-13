@@ -3,6 +3,7 @@
 /// <summary>
 /// The MailBluster API exception.
 /// </summary>
+[Serializable]
 public class MailBlusterApiException : Exception
 {
     /// <summary>

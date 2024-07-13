@@ -6,6 +6,7 @@ namespace Sidio.MailBluster;
 /// <summary>
 /// The MailBluster HTTP exception.
 /// </summary>
+[Serializable]
 public class MailBlusterHttpException : MailBlusterApiException
 {
     /// <summary>
