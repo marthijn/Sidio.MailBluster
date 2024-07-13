@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Flurl.Http.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Sidio.MailBluster.Compliance;
 using Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +23,22 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = false;
 });
+
+builder.Services.AddLogging(
+    x =>
+    {
+        x.EnableRedaction();
+        x.ClearProviders();
+        x.AddJsonConsole(option => option.JsonWriterOptions = new JsonWriterOptions
+        {
+            Indented = true
+        });
+        x.Services.AddRedaction(
+            rb =>
+            {
+                rb.AddMailBlusterCompliance();
+            });
+    });
 
 var app = builder.Build();
 

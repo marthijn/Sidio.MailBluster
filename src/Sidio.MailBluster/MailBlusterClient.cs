@@ -62,8 +62,4 @@ public sealed partial class MailBlusterClient : IMailBlusterClient
         _client
             .WithHeader(AuthorizationHeader, _apiKey)
             .WithHeader(CacheControlHeader, NoCache);
-
-    private bool DebugLogEnabled => _logger.IsEnabled(LogLevel.Debug);
-
-    private bool TraceLogEnabled => _logger.IsEnabled(LogLevel.Trace);
 }
