@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+﻿using Polly.Retry;
+using Sidio.MailBluster.Integration.Tests.Repositories;
 using Sidio.MailBluster.Models;
 
 namespace Sidio.MailBluster.Integration.Tests.Drivers.Products;
@@ -7,10 +8,12 @@ namespace Sidio.MailBluster.Integration.Tests.Drivers.Products;
 public sealed class ProductExistsDriver
 {
     private readonly ProductRepository _repository;
+    private readonly AsyncRetryPolicy _retryPolicy;
 
-    public ProductExistsDriver(ProductRepository repository)
+    public ProductExistsDriver(ProductRepository repository, AsyncRetryPolicy retryPolicy)
     {
         _repository = repository;
+        _retryPolicy = retryPolicy;
     }
     
     public async Task ProductShouldNotExistAsync(string id)
@@ -19,12 +22,21 @@ public sealed class ProductExistsDriver
         result.Should().BeNull();
     }
 
-    public async Task<Product> ProductShouldExistAsync(string id)
+    public async Task<Product> ProductShouldExistAsync(string id, string? expectedProductName = null)
     {
-        var result = await _repository.GetAsync(id);
-        result.Should().NotBeNull();
-        result!.Id.Should().Be(id);
-        return result;
+        return await _retryPolicy.ExecuteAsync(async () =>
+        {
+            var result = await _repository.GetAsync(id);
+            result.Should().NotBeNull();
+            result!.Id.Should().Be(id);
+
+            if (expectedProductName is not null)
+            {
+                result.Name.Should().Be(expectedProductName);
+            }
+
+            return result;
+        });
     }
 
     public async Task<Product> ProductShouldExistInListAsync(string id)
