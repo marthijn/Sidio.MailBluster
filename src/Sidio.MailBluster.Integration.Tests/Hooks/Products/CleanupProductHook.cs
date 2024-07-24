@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+﻿using Sidio.MailBluster.Integration.Tests.Context;
+using Sidio.MailBluster.Integration.Tests.Repositories;
 using Xunit.Abstractions;
 
 namespace Sidio.MailBluster.Integration.Tests.Hooks.Products;
@@ -7,34 +8,29 @@ namespace Sidio.MailBluster.Integration.Tests.Hooks.Products;
 public sealed class CleanupProductHook
 {
     private readonly ProductRepository _repository;
+    private readonly ProductContext _productContext;
 
-    public CleanupProductHook(ProductRepository repository)
+    public CleanupProductHook(ProductRepository repository, ProductContext productContext)
     {
         _repository = repository;
+        _productContext = productContext;
     }
 
-    [AfterScenario("cleanupProduct")]
+    [AfterScenario("products")]
     public async Task CleanupAsync(ScenarioContext scenarioContext)
     {
         var testOutputHelper = scenarioContext.GetTestOutputHelper();
 
         var deleteResult = false;
 
-        var id = scenarioContext.GetProductId();
-        if (!string.IsNullOrWhiteSpace(id))
+        if (_productContext.Product != null)
         {
-            deleteResult = await DeleteProduct(id, testOutputHelper);
-        }
-
-        var product = scenarioContext.GetProduct();
-        if (product != null)
-        {
-            deleteResult = await DeleteProduct(product.Id, testOutputHelper);
+            deleteResult = await DeleteProduct(_productContext.Product.Id, testOutputHelper);
         }
 
         if (!deleteResult)
         {
-            testOutputHelper.WriteLine("No id or product found in scenario context, skipping cleanup");
+            testOutputHelper.WriteLine("No product found in product context, skipping cleanup");
         }
     }
 
