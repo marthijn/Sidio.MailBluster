@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Flurl.Http.Configuration;
+﻿using Flurl.Http.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -32,7 +31,10 @@ public static class MailBlusterServiceCollectionExtensions
     /// <returns>The <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddMailBluster(
         this IServiceCollection services,
-        [ConstantExpected] string configurationSection = MailBlusterOptions.SectionName)
+#if NET7_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.ConstantExpected]
+#endif
+        string configurationSection = MailBlusterOptions.SectionName)
     {
         services.AddOptions<MailBlusterOptions>().Configure<IConfiguration>(
             (settings, configuration) => { configuration.GetSection(configurationSection).Bind(settings); });

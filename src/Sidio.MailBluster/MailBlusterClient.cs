@@ -55,7 +55,11 @@ public sealed partial class MailBlusterClient : IMailBlusterClient
         var inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
         var hashBytes = md5.ComputeHash(inputBytes);
 
+#if NET5_0_OR_GREATER
         return Convert.ToHexString(hashBytes).ToLower();
+#else
+        return ByteArrayToHexString(hashBytes).ToLower();
+#endif
     }
 
     private IFlurlClient DefaultClient =>
@@ -66,4 +70,18 @@ public sealed partial class MailBlusterClient : IMailBlusterClient
     private bool DebugLogEnabled => _logger.IsEnabled(LogLevel.Debug);
 
     private bool TraceLogEnabled => _logger.IsEnabled(LogLevel.Trace);
+
+    private static string ByteArrayToHexString(byte[] bytes)
+    {
+        var sb = new System.Text.StringBuilder(bytes.Length * 2);
+        const string HexAlphabet = "0123456789ABCDEF";
+
+        foreach (var b in bytes)
+        {
+            sb.Append(HexAlphabet[b >> 4]);
+            sb.Append(HexAlphabet[b & 0xF]);
+        }
+
+        return sb.ToString();
+    }
 }

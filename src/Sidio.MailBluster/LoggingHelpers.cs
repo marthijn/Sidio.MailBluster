@@ -9,7 +9,7 @@ internal static class LoggingHelpers
             return emailAddress;
         }
 
-        return $"{emailAddress[0]}***{emailAddress[(emailAddress.IndexOf('@') - 1)..]}";
+        return $"{emailAddress[0]}***{emailAddress.Substring(emailAddress.IndexOf('@') - 1)}";
     }
 
     public static string? Sanitize(this string? input)

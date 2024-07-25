@@ -68,9 +68,15 @@ public sealed class SetupTestDependencies
 
     private static bool IsTransientError(MailBlusterHttpException exception)
     {
+#if NET5_0_OR_GREATER
+        var tooManyRequests = (int) HttpStatusCode.TooManyRequests;
+#else
+        var tooManyRequests = 429;
+#endif
+
         int[] transientHttpStatusCodes =
         [
-            (int)HttpStatusCode.TooManyRequests,
+            tooManyRequests,
             (int)HttpStatusCode.RequestTimeout,
             (int)HttpStatusCode.BadGateway,
             (int)HttpStatusCode.ServiceUnavailable,

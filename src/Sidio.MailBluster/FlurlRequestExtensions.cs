@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Net;
+﻿using System.Net;
 using Flurl.Http;
 using Sidio.MailBluster.Responses;
 
@@ -69,14 +68,16 @@ internal static class FlurlRequestExtensions
         }
     }
 
-    [DoesNotReturn]
+#if NET6_0_OR_GREATER
+    [System.Diagnostics.CodeAnalysis.DoesNotReturn]
+#endif
     private static async Task<IFlurlResponse> HandleExceptionAsync(
         FlurlHttpException httpException)
     {
         switch (httpException.StatusCode)
         {
-            // handle 422
-            case (int)HttpStatusCode.UnprocessableEntity:
+            // handle 422 - UnprocessableEntity
+            case 422:
             {
                 var entities = await httpException.GetResponseJsonAsync<UnprocessableEntityResponse>()
                     .ConfigureAwait(false);
