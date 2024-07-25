@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+﻿using Sidio.MailBluster.Integration.Tests.Context;
+using Sidio.MailBluster.Integration.Tests.Repositories;
 using Xunit.Abstractions;
 
 namespace Sidio.MailBluster.Integration.Tests.Hooks.Fields;
@@ -7,33 +8,28 @@ namespace Sidio.MailBluster.Integration.Tests.Hooks.Fields;
 public sealed class CleanupFieldHook
 {
     private readonly FieldRepository _repository;
+    private readonly FieldContext _fieldContext;
 
-    public CleanupFieldHook(FieldRepository repository)
+    public CleanupFieldHook(FieldRepository repository, FieldContext fieldContext)
     {
         _repository = repository;
+        _fieldContext = fieldContext;
     }
 
-    [AfterScenario("cleanupField")]
+    [AfterScenario("fields")]
     public async Task CleanupAsync(ScenarioContext scenarioContext)
     {
         var testOutputHelper = scenarioContext.GetTestOutputHelper();
         var deleteResult = false;
 
-        var id = scenarioContext.GetFieldId();
-        if (id.HasValue)
+        if (_fieldContext.Field?.Id != null)
         {
-            deleteResult = await DeleteFieldAsync(id.Value, testOutputHelper);
-        }
-
-        var field = scenarioContext.GetField();
-        if (field?.Id != null)
-        {
-            deleteResult = await DeleteFieldAsync(field.Id.Value, testOutputHelper);
+            deleteResult = await DeleteFieldAsync(_fieldContext.Field.Id.Value, testOutputHelper);
         }
 
         if (!deleteResult)
         {
-            testOutputHelper.WriteLine("No field found in scenario context, skipping cleanup");
+            testOutputHelper.WriteLine("No field found in field context, skipping cleanup");
         }
     }
 

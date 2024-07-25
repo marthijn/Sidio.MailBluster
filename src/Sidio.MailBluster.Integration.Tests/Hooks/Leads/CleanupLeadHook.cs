@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+﻿using Sidio.MailBluster.Integration.Tests.Context;
+using Sidio.MailBluster.Integration.Tests.Repositories;
 using Xunit.Abstractions;
 
 namespace Sidio.MailBluster.Integration.Tests.Hooks.Leads;
@@ -7,34 +8,28 @@ namespace Sidio.MailBluster.Integration.Tests.Hooks.Leads;
 public sealed class CleanupLeadHook
 {
     private readonly LeadRepository _repository;
+    private readonly LeadContext _leadContext;
 
-    public CleanupLeadHook(LeadRepository repository)
+    public CleanupLeadHook(LeadRepository repository, LeadContext leadContext)
     {
         _repository = repository;
+        _leadContext = leadContext;
     }
 
-    [AfterScenario("cleanupLead")]
+    [AfterScenario("leads")]
     public async Task CleanupAsync(ScenarioContext scenarioContext)
     {
         var testOutputHelper = scenarioContext.GetTestOutputHelper();
-
         var deleteResult = false;
 
-        var email = scenarioContext.GetLeadEmail();
-        if (!string.IsNullOrWhiteSpace(email))
+        if (!string.IsNullOrWhiteSpace(_leadContext.Email))
         {
-            deleteResult = await DeleteLead(email, testOutputHelper);
-        }
-
-        var lead = scenarioContext.GetLead();
-        if (lead != null)
-        {
-            deleteResult = await DeleteLead(lead.Email, testOutputHelper);
+            deleteResult = await DeleteLead(_leadContext.Email, testOutputHelper);
         }
 
         if (!deleteResult)
         {
-            testOutputHelper.WriteLine("No email or lead found in scenario context, skipping cleanup");
+            testOutputHelper.WriteLine("No email found in lead context, skipping cleanup");
         }
     }
 

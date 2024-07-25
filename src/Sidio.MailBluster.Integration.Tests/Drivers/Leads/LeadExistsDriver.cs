@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Integration.Tests.Repositories;
+﻿using Polly.Retry;
+using Sidio.MailBluster.Integration.Tests.Repositories;
 using Sidio.MailBluster.Models;
 
 namespace Sidio.MailBluster.Integration.Tests.Drivers.Leads;
@@ -7,10 +8,12 @@ namespace Sidio.MailBluster.Integration.Tests.Drivers.Leads;
 public sealed class LeadExistsDriver
 {
     private readonly LeadRepository _repository;
+    private readonly AsyncRetryPolicy _retryPolicy;
 
-    public LeadExistsDriver(LeadRepository repository)
+    public LeadExistsDriver(LeadRepository repository, AsyncRetryPolicy retryPolicy)
     {
         _repository = repository;
+        _retryPolicy = retryPolicy;
     }
 
     public async Task LeadShouldNotExistAsync(string email)
@@ -19,11 +22,20 @@ public sealed class LeadExistsDriver
         result.Should().BeNull();
     }
 
-    public async Task<Lead> LeadShouldExistAsync(string email)
+    public async Task<Lead> LeadShouldExistAsync(string email, string? lastNameShouldBe = null)
     {
-        var result = await _repository.GetAsync(email);
-        result.Should().NotBeNull();
-        result!.Email.Should().Be(email);
-        return result;
+        return await _retryPolicy.ExecuteAsync(async () =>
+        {
+            var result = await _repository.GetAsync(email);
+            result.Should().NotBeNull();
+            result!.Email.Should().Be(email);
+
+            if (lastNameShouldBe is not null)
+            {
+                result.LastName.Should().Be(lastNameShouldBe);
+            }
+
+            return result;
+        });
     }
 }

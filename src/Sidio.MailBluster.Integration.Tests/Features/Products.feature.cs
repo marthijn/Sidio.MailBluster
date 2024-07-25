@@ -19,12 +19,14 @@ namespace Sidio.MailBluster.Integration.Tests.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "2.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [Xunit.TraitAttribute("Category", "products")]
     public partial class CRUDOperationsForProductsFeature : object, Xunit.IClassFixture<CRUDOperationsForProductsFeature.FixtureData>, Xunit.IAsyncLifetime
     {
         
         private static global::Reqnroll.ITestRunner testRunner;
         
-        private static string[] featureTags = ((string[])(null));
+        private static string[] featureTags = new string[] {
+                "products"};
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
@@ -76,6 +78,15 @@ namespace Sidio.MailBluster.Integration.Tests.Features
             await testRunner.CollectScenarioErrorsAsync();
         }
         
+        public virtual async System.Threading.Tasks.Task FeatureBackgroundAsync()
+        {
+#line 4
+#line hidden
+#line 5
+    await testRunner.GivenAsync("a random id is created", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+        }
+        
         async System.Threading.Tasks.Task Xunit.IAsyncLifetime.InitializeAsync()
         {
             await this.TestInitializeAsync();
@@ -89,14 +100,12 @@ namespace Sidio.MailBluster.Integration.Tests.Features
         [Xunit.SkippableFactAttribute(DisplayName="Create a product")]
         [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for products")]
         [Xunit.TraitAttribute("Description", "Create a product")]
-        [Xunit.TraitAttribute("Category", "cleanupProduct")]
         public async System.Threading.Tasks.Task CreateAProduct()
         {
-            string[] tagsOfScenario = new string[] {
-                    "cleanupProduct"};
+            string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create a product", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 4
+#line 7
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -106,13 +115,16 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 5
+#line 4
+await this.FeatureBackgroundAsync();
+#line hidden
+#line 8
     await testRunner.GivenAsync("a product does not exist", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 6
+#line 9
     await testRunner.WhenAsync("the product is created", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 7
+#line 10
     await testRunner.ThenAsync("the product should exist", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -122,16 +134,12 @@ this.ScenarioInitialize(scenarioInfo);
         [Xunit.SkippableFactAttribute(DisplayName="Update a product")]
         [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for products")]
         [Xunit.TraitAttribute("Description", "Update a product")]
-        [Xunit.TraitAttribute("Category", "createProduct")]
-        [Xunit.TraitAttribute("Category", "cleanupProduct")]
         public async System.Threading.Tasks.Task UpdateAProduct()
         {
-            string[] tagsOfScenario = new string[] {
-                    "createProduct",
-                    "cleanupProduct"};
+            string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Update a product", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 11
+#line 12
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -141,13 +149,16 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 12
-    await testRunner.GivenAsync("a product exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line 4
+await this.FeatureBackgroundAsync();
 #line hidden
 #line 13
-    await testRunner.WhenAsync("the product is updated", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.GivenAsync("a product exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 14
+    await testRunner.WhenAsync("the product is updated", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 15
     await testRunner.ThenAsync("the product should be updated", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -157,11 +168,9 @@ this.ScenarioInitialize(scenarioInfo);
         [Xunit.SkippableFactAttribute(DisplayName="Delete a product")]
         [Xunit.TraitAttribute("FeatureTitle", "CRUD operations for products")]
         [Xunit.TraitAttribute("Description", "Delete a product")]
-        [Xunit.TraitAttribute("Category", "createProduct")]
         public async System.Threading.Tasks.Task DeleteAProduct()
         {
-            string[] tagsOfScenario = new string[] {
-                    "createProduct"};
+            string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete a product", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 17
@@ -174,6 +183,9 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 await this.ScenarioStartAsync();
+#line 4
+await this.FeatureBackgroundAsync();
+#line hidden
 #line 18
     await testRunner.GivenAsync("a product exists", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
