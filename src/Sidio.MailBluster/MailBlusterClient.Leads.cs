@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using Flurl.Http;
-using Microsoft.Extensions.Logging;
+﻿using Sidio.MailBluster.Logging;
 using Sidio.MailBluster.Requests.Leads;
 using Sidio.MailBluster.Responses.Leads;
 
@@ -11,53 +9,34 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<CreateLeadResponse> CreateLeadAsync(CreateLeadRequest request, CancellationToken cancellationToken = default)
     {
-        if (TraceLogEnabled)
-        {
-            _logger.LogTrace("Creating lead: {Request}", JsonSerializer.Serialize(request));
-        }
-        else if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Creating lead with Email `{Email}`", request.Email.Sanitize().ObfuscateEmailAddress());
-        }
-
+        _logger.LogCreateLeadRequest(request.Email, request);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads)
             .PostJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<CreateLeadResponse>().ConfigureAwait(false);
+        _logger.LogCreateLeadResponse(request.Email, result);
         return result;
     }
 
     /// <inheritdoc />
     public async Task<GetLeadResponse?> GetLeadAsync(string email, CancellationToken cancellationToken = default)
     {
-        if (TraceLogEnabled)
-        {
-            _logger.LogTrace("Get lead with Email `{Email}`", email.Sanitize());
-        }
-        else if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Get lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
-        }
+        _logger.LogGetLeadRequest(email);
 
-        IFlurlResponse? response = null;
         try
         {
-            response = await DefaultClient
+            var response = await DefaultClient
                 .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
                 .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            return await response.GetJsonAsync<GetLeadResponse>().ConfigureAwait(false);
+            var result = await response.GetJsonAsync<GetLeadResponse>().ConfigureAwait(false);
+            _logger.LogGetLeadResponse(email, result);
+            return result;
         }
         catch (MailBlusterNoContentException)
         {
-            if (DebugLogEnabled)
-            {
-                _logger.LogDebug(
-                    "Response status code {StatusCode} for get lead `{Email}`",
-                    response?.StatusCode,
-                    email.Sanitize().ObfuscateEmailAddress());
-            }
+            _logger.LogLeadNotFound(email);
         }
 
         return null;
@@ -66,55 +45,33 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<UpdateLeadResponse> UpdateLeadAsync(string email, UpdateLeadRequest request, CancellationToken cancellationToken = default)
     {
-        if (TraceLogEnabled)
-        {
-            _logger.LogTrace("Updating lead: {Request}", JsonSerializer.Serialize(request));
-        }
-        else if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Updating lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
-        }
-
+        _logger.LogUpdateLeadRequest(email, request);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
             .PutJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<UpdateLeadResponse>().ConfigureAwait(false);
+        _logger.LogUpdateLeadResponse(email, result);
         return result;
     }
 
     /// <inheritdoc />
     public async Task<DeleteLeadResponse> DeleteLeadAsync(string email, CancellationToken cancellationToken = default)
     {
-        if (TraceLogEnabled)
-        {
-            _logger.LogTrace("Delete lead with Email `{Email}`", email.Sanitize());
-        }
-        else if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Delete lead with Email `{Email}`", email.Sanitize().ObfuscateEmailAddress());
-        }
-
-        IFlurlResponse? response = null;
+        _logger.LogDeleteLeadRequest(email);
         try
         {
             var md5 = CreateMd5Hash(email);
-            response = await DefaultClient
+            var response = await DefaultClient
                 .Request(MailBlusterApiConstants.Leads, md5)
                 .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = await response.GetJsonAsync<DeleteLeadResponse>().ConfigureAwait(false);
+            _logger.LogDeleteLeadResponse(email, result);
             return result;
         }
         catch (MailBlusterNoContentException ex)
         {
-            if (DebugLogEnabled)
-            {
-                _logger.LogDebug(
-                    "Response status code {StatusCode} for delete lead `{Email}`",
-                    response?.StatusCode,
-                    email.Sanitize().ObfuscateEmailAddress());
-            }
-
+            _logger.LogLeadNotFound(email);
             return new DeleteLeadResponse
             {
                 Message = ex.Message

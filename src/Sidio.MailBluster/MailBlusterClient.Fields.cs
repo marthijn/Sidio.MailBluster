@@ -1,5 +1,4 @@
-﻿using Flurl.Http;
-using Microsoft.Extensions.Logging;
+﻿using Sidio.MailBluster.Logging;
 using Sidio.MailBluster.Requests.Fields;
 using Sidio.MailBluster.Responses.Fields;
 
@@ -10,77 +9,58 @@ public sealed partial class MailBlusterClient
     /// <inheritdoc />
     public async Task<GetFieldsResponse> GetFieldsAsync(CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Get all fields");
-        }
-
+        _logger.LogGetFieldsRequest();
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Fields)
             .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        return await response.GetJsonAsync<GetFieldsResponse>().ConfigureAwait(false);
+        var result = await response.GetJsonAsync<GetFieldsResponse>().ConfigureAwait(false);
+        _logger.LogGetFieldsResponse(result);
+        return result;
     }
 
     /// <inheritdoc />
     public async Task<CreateFieldResponse> CreateFieldAsync(CreateFieldRequest request, CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Creating field with Label `{FieldLabel}`", request.FieldLabel.Sanitize());
-        }
-
+        _logger.LogCreateFieldRequest(request.FieldLabel, request);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Fields)
             .PostJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<CreateFieldResponse>().ConfigureAwait(false);
+        _logger.LogCreateFieldResponse(request.FieldLabel, result);
         return result;
     }
 
     /// <inheritdoc />
     public async Task<UpdateFieldResponse> UpdateFieldAsync(long id, UpdateFieldRequest request, CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Updating field with id `{FieldId}`", id);
-        }
-
+        _logger.LogUpdateFieldRequest(id, request);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Fields, id.ToString())
             .PutJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<UpdateFieldResponse>().ConfigureAwait(false);
+        _logger.LogUpdateFieldResponse(id, result);
         return result;
     }
 
     /// <inheritdoc />
     public async Task<DeleteFieldResponse> DeleteFieldAsync(long id, CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Delete field with id `{FieldId}`", id);
-        }
-
-        IFlurlResponse? response = null;
+        _logger.LogDeleteFieldRequest(id);
         try
         {
-            response = await DefaultClient
+            var response = await DefaultClient
                 .Request(MailBlusterApiConstants.Fields, id.ToString())
                 .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = await response.GetJsonAsync<DeleteFieldResponse>().ConfigureAwait(false);
+            _logger.LogDeleteFieldResponse(id, new DeleteFieldResponse());
             return result;
         }
         catch (MailBlusterNoContentException ex)
         {
-            if (DebugLogEnabled)
-            {
-                _logger.LogDebug(
-                    "Response status code {StatusCode} for delete field with id `{FieldId}`",
-                    response?.StatusCode,
-                    id);
-            }
-
+            _logger.LogFieldNotFound(id);
             return new DeleteFieldResponse
             {
                 Message = ex.Message

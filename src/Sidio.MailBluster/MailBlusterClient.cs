@@ -67,10 +67,6 @@ public sealed partial class MailBlusterClient : IMailBlusterClient
             .WithHeader(AuthorizationHeader, _apiKey)
             .WithHeader(CacheControlHeader, NoCache);
 
-    private bool DebugLogEnabled => _logger.IsEnabled(LogLevel.Debug);
-
-    private bool TraceLogEnabled => _logger.IsEnabled(LogLevel.Trace);
-
     private static string ByteArrayToHexString(byte[] bytes)
     {
         var sb = new System.Text.StringBuilder(bytes.Length * 2);
