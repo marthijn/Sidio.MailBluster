@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Sidio.MailBluster.Compliance;
 
 namespace Sidio.MailBluster.Models;
 
@@ -18,6 +19,7 @@ public record Lead : LeadBase
     /// Gets the full name.
     /// </summary>
     [JsonPropertyName("fullName")]
+    [PersonallyIdentifiableInformation]
     public string? FullName { get; init; }
 
     /// <summary>

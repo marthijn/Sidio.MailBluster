@@ -7,6 +7,10 @@ pull request.
 [![build](https://github.com/marthijn/Sidio.MailBluster/actions/workflows/build.yml/badge.svg)](https://github.com/marthijn/Sidio.MailBluster/actions/workflows/build.yml)
 [![NuGet Version](https://img.shields.io/nuget/v/Sidio.MailBluster)](https://www.nuget.org/packages/Sidio.MailBluster/)
 
+⚠️ On the debug log level, sensitive data will be logged. It is highly recommended to
+disable the debug log level on production systems and/or configure redaction. See the logging and compliance section
+of this readme.
+
 # Installation
 Add [the package](https://www.nuget.org/packages/Sidio.MailBluster/) to your project.
 
@@ -42,9 +46,48 @@ public class MyClass
 }
 ```
 
-# Logging
-⚠️ Be aware when the log level `Trace` is used, sensitive data (e.g. email address, names) might be logged. It is recommended
-not to use trace logging in production environments.
+# Logging and compliance
+The MailBluster client writes logs on the `Debug` level. The logs contain the request and response data. Sensitive information,
+such as names, ip addresses and email addresses, are redacted using the `Microsoft.Extensions.Compliance.Redaction` framework. To use the
+default implementation, use:
+```csharp
+builder.Services.AddRedaction(
+    rb =>
+    {
+        rb.AddMailBlusterCompliance();
+    });
+```
+
+Currently, there are three types of classifications, which will be redacted as follows:
+- Personally identifiable information: values will be replaced with asterisks except for the first character (classification `MailBlusterDataTaxonomy.PersonallyIdentifiableInformation`)
+  - Email address: will be redacted from for example `noreply@sidio.nl` to `n******@*****.**` (classification `MailBlusterDataTaxonomy.EmailAddressInformation`)
+- Sensitive information: values will be replaced with asterisks except for the first character (classification `MailBlusterDataTaxonomy.SensitiveInformation`)
+
+A fully configured example with JSON logging:
+```csharp
+// install packages:
+// - Microsoft.Extensions.Telemetry
+// - Microsoft.Extensions.Compliance.Redaction
+builder.Services.AddLogging(
+    x =>
+    {
+        x.EnableRedaction();
+        
+        // json logging enables logging of the request and response data
+        x.ClearProviders();
+        x.AddJsonConsole(option => option.JsonWriterOptions = new JsonWriterOptions
+        {
+            Indented = true
+        });
+        
+        x.Services.AddRedaction(
+            rb =>
+            {
+                rb.AddMailBlusterCompliance();
+            });
+    });
+```
+
 
 # Feature status
 - [x] Manage leads
@@ -83,6 +126,14 @@ add the following configuration file `local.settings.json`:
 
 # API Documentation
 - [MailBluster API](https://mailbluster.com/docs/api)
+
+# Troubleshooting
+## Sensitive data is not redacted in the logs
+Install these packages in your solution:
+- `Microsoft.Extensions.Telemetry`
+- `Microsoft.Extensions.Compliance.Redaction`
+
+Ensure that the Redaction framework is configured correctly.
 
 # Disclaimer
 This package is not affiliated with MailBluster. Although we try to cover the API as much as possible using unit- 

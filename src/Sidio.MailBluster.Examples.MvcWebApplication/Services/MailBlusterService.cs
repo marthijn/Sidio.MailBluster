@@ -4,7 +4,7 @@ namespace Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
 public sealed class MailBlusterService
 {
-    private const string SessionKey = "MailBlusterApiKey";
+    private const string CookieName = "MailBlusterApiKey";
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -36,7 +36,10 @@ public sealed class MailBlusterService
             throw new InvalidOperationException("HttpContext is not available.");
         }
 
-        _httpContextAccessor.HttpContext.Session.SetString(SessionKey, apiKey);
+        _httpContextAccessor.HttpContext.Response.Cookies.Append(
+            CookieName,
+            apiKey,
+            new CookieOptions {HttpOnly = true, Secure = true});
     }
 
     public string? GetApiKey()
@@ -46,6 +49,7 @@ public sealed class MailBlusterService
             throw new InvalidOperationException("HttpContext is not available.");
         }
 
-        return _httpContextAccessor.HttpContext.Session.GetString(SessionKey);
+        var cookie = _httpContextAccessor.HttpContext.Request.Cookies[CookieName];
+        return string.IsNullOrWhiteSpace(cookie) ? null : cookie;
     }
 }

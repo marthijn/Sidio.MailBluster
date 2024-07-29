@@ -1,5 +1,5 @@
 ﻿using Flurl.Http;
-using Microsoft.Extensions.Logging;
+using Sidio.MailBluster.Logging;
 using Sidio.MailBluster.Requests.Products;
 using Sidio.MailBluster.Responses.Products;
 
@@ -13,46 +13,35 @@ public sealed partial class MailBlusterClient
         int? perPage = null,
         CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Get all products");
-        }
-
+        _logger.LogGetProductsRequest(pageNo, perPage);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Products)
             .AppendQueryParam("pageNo", pageNo)
             .AppendQueryParam("perPage", perPage)
             .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        return await response.GetJsonAsync<GetProductsResponse>().ConfigureAwait(false);
+        var result = await response.GetJsonAsync<GetProductsResponse>().ConfigureAwait(false);
+        _logger.LogGetProductsResponse(result);
+        return result;
     }
 
     /// <inheritdoc />
     public async Task<GetProductResponse?> GetProductAsync(string id, CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Get product with id `{ProductId}`", id.Sanitize());
-        }
-
-        IFlurlResponse? response = null;
+        _logger.LogGetProductRequest(id);
         try
         {
-            response = await DefaultClient
+            var response = await DefaultClient
                 .Request(MailBlusterApiConstants.Products, id)
                 .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            return await response.GetJsonAsync<GetProductResponse>().ConfigureAwait(false);
+            var result = await response.GetJsonAsync<GetProductResponse>().ConfigureAwait(false);
+            _logger.LogGetProductResponse(id, result);
+            return result;
         }
         catch (MailBlusterNoContentException)
         {
-            if (DebugLogEnabled)
-            {
-                _logger.LogDebug(
-                    "Response status code {StatusCode} for get product with id `{ProductId}`",
-                    response?.StatusCode,
-                    id.Sanitize());
-            }
+            _logger.LogProductNotFound(id);
         }
 
         return null;
@@ -63,61 +52,45 @@ public sealed partial class MailBlusterClient
         CreateProductRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Creating product with id `{ProductId}`", request.Id.Sanitize());
-        }
-
+        _logger.LogCreateProductRequest(request.Name, request);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Products)
             .PostJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<CreateProductResponse>().ConfigureAwait(false);
+        _logger.LogCreateProductResponse(request.Name, result);
         return result;
     }
 
     /// <inheritdoc />
     public async Task<UpdateProductResponse> UpdateProductAsync(string id, UpdateProductRequest request, CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Updating product with id `{ProductId}`", id.Sanitize());
-        }
-
+        _logger.LogUpdateProductRequest(id, request);
         var response = await DefaultClient
             .Request(MailBlusterApiConstants.Products, id)
             .PutJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         var result = await response.GetJsonAsync<UpdateProductResponse>().ConfigureAwait(false);
+        _logger.LogUpdateProductResponse(id, result);
         return result;
     }
 
     /// <inheritdoc />
     public async Task<DeleteProductResponse> DeleteProductAsync(string id, CancellationToken cancellationToken = default)
     {
-        if (DebugLogEnabled)
-        {
-            _logger.LogDebug("Deleting product with id `{ProductId}`", id.Sanitize());
-        }
-
-        IFlurlResponse? response = null;
+        _logger.LogDeleteProductRequest(id);
         try
         {
-            response = await DefaultClient
+            var response = await DefaultClient
                 .Request(MailBlusterApiConstants.Products, id)
                 .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             var result = await response.GetJsonAsync<DeleteProductResponse>().ConfigureAwait(false);
+            _logger.LogDeleteProductResponse(id, result);
             return result;
         }
         catch (MailBlusterNoContentException ex)
         {
-            if (DebugLogEnabled)
-            {
-                _logger.LogDebug(
-                    "Response status code {StatusCode} for delete product with id `{ProductId}`",
-                    response?.StatusCode,
-                    id.Sanitize());
-            }
+            _logger.LogProductNotFound(id);
 
             return new DeleteProductResponse
             {

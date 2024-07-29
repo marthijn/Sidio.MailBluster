@@ -1,6 +1,6 @@
 ﻿namespace Sidio.MailBluster;
 
-internal sealed class MailBlusterApiConstants
+internal static class MailBlusterApiConstants
 {
     public const string Leads = "leads";
     public const string Fields = "fields";

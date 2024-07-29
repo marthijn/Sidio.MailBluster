@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Sidio.MailBluster.Compliance;
 
 namespace Sidio.MailBluster.Models;
 
@@ -12,6 +13,7 @@ public abstract record LeadBase
     /// </summary>
     [JsonPropertyName("firstName")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [PersonallyIdentifiableInformation]
     public string? FirstName { get; init; }
 
     /// <summary>
@@ -19,12 +21,14 @@ public abstract record LeadBase
     /// </summary>
     [JsonPropertyName("lastName")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [PersonallyIdentifiableInformation]
     public string? LastName { get; init; }
 
     /// <summary>
     /// Gets the email address.
     /// </summary>
     [JsonPropertyName("email")]
+    [EmailAddressInformation]
     public required string Email { get; init; }
 
     /// <summary>
@@ -52,5 +56,6 @@ public abstract record LeadBase
     /// </summary>
     [JsonPropertyName("ipAddress")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [SensitiveInformation]
     public string? IpAddress { get; init; }
 }
