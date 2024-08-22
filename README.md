@@ -6,7 +6,6 @@ pull request.
 
 [![build](https://github.com/marthijn/Sidio.MailBluster/actions/workflows/build.yml/badge.svg)](https://github.com/marthijn/Sidio.MailBluster/actions/workflows/build.yml)
 [![NuGet Version](https://img.shields.io/nuget/v/Sidio.MailBluster)](https://www.nuget.org/packages/Sidio.MailBluster/)
-[![Coverage Status](https://coveralls.io/repos/github/marthijn/Sidio.MailBluster/badge.svg?branch=main)](https://coveralls.io/github/marthijn/Sidio.MailBluster?branch=main)
 
 ⚠️ On the debug log level, sensitive data will be logged. It is highly recommended to
 disable the debug log level on production systems and/or configure redaction. See the logging and compliance section
