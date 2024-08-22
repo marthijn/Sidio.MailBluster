@@ -40,7 +40,7 @@ jobs:
           /p:CoverletOutputFormat="\"cobertura,json\""
           /p:CoverletOutput=coverage/
           /p:IncludeTestAssembly=false
-          /p:ExcludeByAttribute="GeneratedCodeAttribute,CompilerGeneratedAttribute"
+          /p:ExcludeByAttribute="System.CodeDom.Compiler.GeneratedCodeAttribute"
       - name: Upload dotnet test results
         uses: coverallsapp/github-action@v2.3.0
         with:
