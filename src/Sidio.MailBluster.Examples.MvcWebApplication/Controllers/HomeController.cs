@@ -1,10 +1,12 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc;
 using Sidio.MailBluster.Examples.MvcWebApplication.Models;
 using Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
 namespace Sidio.MailBluster.Examples.MvcWebApplication.Controllers;
 
+[ExcludeFromCodeCoverage]
 public class HomeController : Controller
 {
     private readonly MailBlusterService _service;

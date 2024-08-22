@@ -1,9 +1,11 @@
-namespace Sidio.MailBluster.Examples.MvcWebApplication.Models
-{
-    public class ErrorViewModel
-    {
-        public string? RequestId { get; set; }
+using System.Diagnostics.CodeAnalysis;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-    }
+namespace Sidio.MailBluster.Examples.MvcWebApplication.Models;
+
+[ExcludeFromCodeCoverage]
+public class ErrorViewModel
+{
+    public string? RequestId { get; set; }
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 }

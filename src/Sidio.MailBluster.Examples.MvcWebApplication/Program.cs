@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Flurl.Http.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -64,3 +65,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+[ExcludeFromCodeCoverage]
+public partial class Program;

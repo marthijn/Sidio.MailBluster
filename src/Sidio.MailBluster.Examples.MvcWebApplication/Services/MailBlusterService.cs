@@ -1,7 +1,9 @@
-﻿using Flurl.Http.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using Flurl.Http.Configuration;
 
 namespace Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class MailBlusterService
 {
     private const string CookieName = "MailBlusterApiKey";
