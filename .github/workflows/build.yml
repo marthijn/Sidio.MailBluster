@@ -42,7 +42,7 @@ jobs:
           /p:IncludeTestAssembly=false
           /p:ExcludeByAttribute="System.CodeDom.Compiler.GeneratedCodeAttribute"
       - name: Upload dotnet test results
-        uses: coverallsapp/github-action@v2.3.0
+        uses: coverallsapp/github-action@v2.3.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ github.workspace }}/src/Sidio.MailBluster.Tests/coverage/coverage.cobertura.xml
