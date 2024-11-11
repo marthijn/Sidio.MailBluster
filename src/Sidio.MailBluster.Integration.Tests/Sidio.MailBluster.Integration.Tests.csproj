@@ -21,11 +21,11 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-        <PackageReference Include="FluentAssertions" Version="6.12.1" />
+        <PackageReference Include="FluentAssertions" Version="6.12.2" />
         <PackageReference Include="Polly" Version="8.4.2" />
-        <PackageReference Include="Reqnroll" Version="2.1.1" />
-        <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-        <PackageReference Include="Reqnroll.xUnit" Version="2.1.1" />
+        <PackageReference Include="Reqnroll" Version="2.2.1" />
+        <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="2.2.1" />
+        <PackageReference Include="Reqnroll.xUnit" Version="2.2.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
