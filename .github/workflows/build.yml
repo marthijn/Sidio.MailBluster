@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        dotnet-version: [ '8.0.x' ]
+        dotnet-version: [ '9.x' ]
 
     steps:
       - uses: actions/checkout@v4
@@ -45,6 +45,6 @@ jobs:
         uses: coverallsapp/github-action@v2.3.4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ github.workspace }}/src/Sidio.MailBluster.Tests/coverage/coverage.cobertura.xml
+          file: ${{ github.workspace }}/src/Sidio.MailBluster.Tests/coverage/coverage.net8.0.cobertura.xml ${{ github.workspace }}/src/Sidio.MailBluster.Tests/coverage/coverage.net9.0.cobertura.xml
           format: cobertura
         if: ${{ always() }}
