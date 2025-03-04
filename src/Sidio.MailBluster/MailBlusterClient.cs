@@ -16,7 +16,7 @@ public sealed partial class MailBlusterClient : IMailBlusterClient, IDisposable
     private const string AuthorizationHeader = "Authorization";
 
     private readonly ILogger<MailBlusterClient> _logger;
-    private readonly IRestClient _restClient;
+    private readonly RestClient _restClient;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MailBlusterClient"/> class.
@@ -55,14 +55,17 @@ public sealed partial class MailBlusterClient : IMailBlusterClient, IDisposable
         _restClient.AddDefaultHeader(AuthorizationHeader, apiKey);
     }
 
-    private MailBlusterClient(IRestClient restClient, ILogger<MailBlusterClient> logger)
+    private MailBlusterClient(HttpMessageHandler httpMessageHandler, string baseUrl, ILogger<MailBlusterClient> logger)
     {
-        _restClient = restClient;
+        _restClient = new RestClient(httpMessageHandler, configureRestClient: options =>
+        {
+            options.BaseUrl = new Uri(baseUrl);
+        });
         _logger = logger;
     }
 
-    internal static MailBlusterClient Create(IRestClient client, ILogger<MailBlusterClient> logger) =>
-        new(client, logger);
+    internal static MailBlusterClient Create(HttpMessageHandler httpMessageHandler, string baseUrl, ILogger<MailBlusterClient> logger) =>
+        new(httpMessageHandler, baseUrl, logger);
 
     private static string CreateMd5Hash(string input)
     {

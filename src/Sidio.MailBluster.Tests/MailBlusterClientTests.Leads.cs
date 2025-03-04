@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using RestSharp;
 using Sidio.MailBluster.Requests.Leads;
 
 namespace Sidio.MailBluster.Tests;
@@ -11,17 +10,14 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("CreateResponse.json", "Leads");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Leads}")
+            .Respond(HttpStatusCode.Created, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         var fields = new Dictionary<string, string> {{_fixture.Create<string>(), _fixture.Create<string>()}};
-
         var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Leads),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.CreateLeadAsync(request);
@@ -38,17 +34,14 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("UnprocessableEntity.json", "Errors");
-        var restResponse = CreateResponse(HttpStatusCode.UnprocessableEntity, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Leads}")
+            .Respond(HttpStatusCode.UnprocessableEntity, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         var fields = new Dictionary<string, string> {{_fixture.Create<string>(), _fixture.Create<string>()}};
-
         var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Leads),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
 
         // act
         var action = () => client.CreateLeadAsync(request);
@@ -67,16 +60,14 @@ public sealed partial class MailBlusterClientTests
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var responseData = ReadJsonData("UpdateResponse.json", "Leads");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.LeadsByHash.Replace("{lead_hash}", RequestMd5)}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         var request = _fixture.Build<UpdateLeadRequest>()
             .With(x => x.Email, RequestEmail).Create();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Put && r.Resource == MailBlusterApiConstants.LeadsByHash),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.UpdateLeadAsync(RequestEmail, request);
@@ -95,22 +86,18 @@ public sealed partial class MailBlusterClientTests
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var responseData = ReadJsonData("ReadResponse.json", "Leads");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.LeadsByHash.Replace("{lead_hash}", RequestMd5)}")
+            .Respond(HttpStatusCode.Created, ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.LeadsByHash
-                    && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetLeadAsync(RequestEmail);
 
         // assert
         response.Should().NotBeNull();
-        response!.Email.Should().Be("richard@example.com");
+        response.Email.Should().Be("richard@example.com");
         response.FirstName.Should().Be("Richard");
         response.LastName.Should().Be("Hendricks");
         response.FullName.Should().Be("Richard Hendricks");
@@ -131,15 +118,11 @@ public sealed partial class MailBlusterClientTests
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var responseData = ReadJsonData("ApiEndpointDoesNotExist.json", "Errors");
-        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.LeadsByHash.Replace("{lead_hash}", RequestMd5)}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.LeadsByHash
-                                                                   && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var action = () => client.GetLeadAsync(RequestEmail);
@@ -155,15 +138,11 @@ public sealed partial class MailBlusterClientTests
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var responseData = ReadJsonData("NotFoundResponse.json", "Leads");
-        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.LeadsByHash.Replace("{lead_hash}", RequestMd5)}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.LeadsByHash
-                                                                   && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetLeadAsync(RequestEmail);
@@ -179,15 +158,11 @@ public sealed partial class MailBlusterClientTests
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var responseData = ReadJsonData("DeleteResponse.json", "Leads");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.LeadsByHash.Replace("{lead_hash}", RequestMd5)}")
+            .Respond(ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.LeadsByHash
-                                                                      && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteLeadAsync(RequestEmail);
@@ -206,15 +181,11 @@ public sealed partial class MailBlusterClientTests
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
         var responseData = ReadJsonData("DeleteNotFoundResponse.json", "Leads");
-        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.LeadsByHash.Replace("{lead_hash}", RequestMd5)}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.LeadsByHash
-                                                                      && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteLeadAsync(RequestEmail);

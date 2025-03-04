@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using RestSharp;
 using Sidio.MailBluster.Requests.Fields;
 using Sidio.MailBluster.Responses;
 
@@ -12,14 +11,11 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("ReadResponse.json", "Fields");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Fields}")
+            .Respond(ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.Fields),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetFieldsAsync();
@@ -40,14 +36,11 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("CreateResponse.json", "Fields");
-        var restResponse = CreateResponse(HttpStatusCode.Created, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Fields}")
+            .Respond(HttpStatusCode.Created, ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Fields),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         var request = _fixture.Build<CreateFieldRequest>().Create();
 
@@ -66,15 +59,12 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("FeatureLocked.json", "Errors");
-        var restResponse = CreateResponse(HttpStatusCode.Forbidden, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Fields}")
+            .Respond(HttpStatusCode.Forbidden, ApplicationJson, responseData);
 
+        var client = CreateClient(mockHttp);
         var request = _fixture.Build<CreateFieldRequest>().Create();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Fields),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
 
         // act
         var action = () => client.CreateFieldAsync(request);
@@ -91,15 +81,13 @@ public sealed partial class MailBlusterClientTests
         // arrange
         const long Id = 9788646;
         var responseData = ReadJsonData("UpdateResponse.json", "Fields");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.FieldsById.Replace("{field_id}", Id.ToString())}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         var request = _fixture.Build<UpdateFieldRequest>().Create();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Put && r.Resource == MailBlusterApiConstants.FieldsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.UpdateFieldAsync(Id, request);
@@ -118,14 +106,11 @@ public sealed partial class MailBlusterClientTests
         // arrange
         const long Id = 9788646;
         var responseData = ReadJsonData("DeleteResponse.json", "Fields");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.FieldsById.Replace("{field_id}", Id.ToString())}")
+            .Respond(ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.FieldsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteFieldAsync(Id);
@@ -141,16 +126,13 @@ public sealed partial class MailBlusterClientTests
     public async Task DeleteFieldAsync_WhenFieldDoesNotExist_ShouldReturnSuccessWithEmptyId()
     {
         // arrange
-        var responseData = ReadJsonData("DeleteNotFoundResponse.json", "Fields");
-        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
-
         var id = _fixture.Create<long>();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.FieldsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var responseData = ReadJsonData("DeleteNotFoundResponse.json", "Fields");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.FieldsById.Replace("{field_id}", id.ToString())}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteFieldAsync(id);

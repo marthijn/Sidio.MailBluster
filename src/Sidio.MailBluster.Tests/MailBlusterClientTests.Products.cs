@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using RestSharp;
 using Sidio.MailBluster.Requests.Products;
 
 namespace Sidio.MailBluster.Tests;
@@ -11,14 +10,11 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("GetProductsResponse.json", "Products");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Products}")
+            .Respond(ApplicationJson, responseData);
 
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.Products),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetProductsAsync();
@@ -42,22 +38,19 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("GetProductResponse.json", "Products");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
-
         var id = _fixture.Create<string>();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.ProductsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetProductAsync(id);
 
         // assert
         response.Should().NotBeNull();
-        response!.Id.Should().Be("101");
+        response.Id.Should().Be("101");
         response.Name.Should().Be("Reign Html Template");
         response.CreatedAt.Should().Be("2016-07-23T08:03:18.954Z");
         response.UpdatedAt.Should().Be("2016-11-04T01:32:12.000Z");
@@ -68,15 +61,12 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("NotFoundResponse.json", "Products");
-        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
-
         var id = _fixture.Create<string>();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.ProductsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetProductAsync(id);
@@ -90,15 +80,12 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("CreateResponse.json", "Products");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
-
         var request = _fixture.Build<CreateProductRequest>().Create();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Products),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Products}")
+            .Respond(HttpStatusCode.Created, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.CreateProductAsync(request);
@@ -116,15 +103,12 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("UnprocessableEntity.json", "Errors");
-        var restResponse = CreateResponse(HttpStatusCode.UnprocessableEntity, responseData);
-
         var request = _fixture.Build<CreateProductRequest>().Create();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Products),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Products}")
+            .Respond(HttpStatusCode.UnprocessableEntity, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var action = () => client.CreateProductAsync(request);
@@ -141,16 +125,13 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("UpdateResponse.json", "Products");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
-
         var request = _fixture.Build<UpdateProductRequest>().Create();
         var id = _fixture.Create<string>();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Put && r.Resource == MailBlusterApiConstants.ProductsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond( ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.UpdateProductAsync(id, request);
@@ -166,15 +147,12 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("DeleteResponse.json", "Products");
-        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
-
         var id = _fixture.Create<string>();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.ProductsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteProductAsync(id);
@@ -191,15 +169,12 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         var responseData = ReadJsonData("DeleteNotFoundResponse.json", "Products");
-        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
-
         var id = _fixture.Create<string>();
-        var client = CreateClient(out var restClientMock);
-        restClientMock.Setup(
-                x => x.ExecuteAsync(
-                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.ProductsById),
-                    It.IsAny<CancellationToken>()))
-            .ReturnsAsync(restResponse);
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteProductAsync(id);
