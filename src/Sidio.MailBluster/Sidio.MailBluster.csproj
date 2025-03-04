@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <Authors>Marthijn van den Heuvel,Sidio</Authors>
-        <Copyright>Copyright (c) 2024 Marthijn van den Heuvel</Copyright>
+        <Copyright>Copyright (c) 2024-2025 Marthijn van den Heuvel</Copyright>
         <PackageId>Sidio.MailBluster</PackageId>        
         <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -23,7 +23,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Flurl.Http" Version="4.0.2" />
       <PackageReference Include="Microsoft.Extensions.Compliance.Abstractions" Version="9.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.2" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
@@ -33,6 +32,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.Extensions.Telemetry.Abstractions" Version="9.0.0" />
+      <PackageReference Include="RestSharp" Version="112.1.0" />
     </ItemGroup>
 
     <ItemGroup>

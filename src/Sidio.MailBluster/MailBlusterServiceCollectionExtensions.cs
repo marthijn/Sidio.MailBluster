@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Flurl.Http.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Sidio.MailBluster;
 
@@ -55,8 +53,7 @@ public static class MailBlusterServiceCollectionExtensions
 
     private static IServiceCollection AddMailBlusterInternal(this IServiceCollection services)
     {
-        services.TryAddSingleton<IFlurlClientCache, FlurlClientCache>();
-        services.AddScoped<IMailBlusterClient, MailBlusterClient>();
+        services.AddSingleton<IMailBlusterClient, MailBlusterClient>();
         return services;
     }
 }

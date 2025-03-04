@@ -1,26 +1,17 @@
 ﻿using System.Reflection;
-using Flurl.Http.Configuration;
-using Flurl.Http.Testing;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 
 namespace Sidio.MailBluster.Tests;
 
-public sealed partial class MailBlusterClientTests : IDisposable
+public sealed partial class MailBlusterClientTests
 {
-    private readonly HttpTest _httpTest = new ();
-
-    private readonly IOptions<MailBlusterOptions> _options =
-        Options.Create(new MailBlusterOptions { ApiKey = "key1", Url = "https://localhost/api/" });
+    private const string BaseUrl = "https://localhost/api";
+    private const string ApplicationJson = "application/json";
 
     private readonly Fixture _fixture = new ();
 
-    public void Dispose()
-    {
-        _httpTest.Dispose();
-    }
-
-    private MailBlusterClient CreateClient() => new(new FlurlClientCache(), _options, NullLogger<MailBlusterClient>.Instance);
+    private static MailBlusterClient CreateClient(MockHttpMessageHandler mockHttpMessageHandler) =>
+        MailBlusterClient.Create(mockHttpMessageHandler, BaseUrl, NullLogger<MailBlusterClient>.Instance);
 
     private static string ReadJsonData(string filename, string section)
     {

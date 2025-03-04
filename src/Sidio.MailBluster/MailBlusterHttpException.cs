@@ -1,4 +1,4 @@
-﻿using Flurl.Http;
+﻿using System.Net;
 using Sidio.MailBluster.Responses;
 
 namespace Sidio.MailBluster;
@@ -14,11 +14,20 @@ public class MailBlusterHttpException : MailBlusterApiException
     /// </summary>
     /// <param name="code">The error code.</param>
     /// <param name="message">The message.</param>
+    /// <param name="content">The reseponse content.</param>
     /// <param name="innerException">The inner exception.</param>
-    public MailBlusterHttpException(string? code, string? message, Exception? innerException = null)
+    /// <param name="httpStatusCode">The HTTP status code.</param>
+    public MailBlusterHttpException(
+        string? code,
+        string? message,
+        HttpStatusCode httpStatusCode,
+        string? content = null,
+        Exception? innerException = null)
         : base(message, innerException)
     {
         Code = code;
+        HttpStatusCode = httpStatusCode;
+        Content = content;
     }
 
     /// <summary>
@@ -27,13 +36,18 @@ public class MailBlusterHttpException : MailBlusterApiException
     public string? Code { get; }
 
     /// <summary>
+    /// The HTTP status code.
+    /// </summary>
+    public HttpStatusCode HttpStatusCode { get; }
+
+    /// <summary>
+    /// Gets the raw response content.
+    /// </summary>
+    public string? Content { get; }
+
+    /// <summary>
     /// The error code.
     /// </summary>
     public ErrorCode ErrorCode =>
         Enum.TryParse<ErrorCode>(Code, true, out var errorCode) ? errorCode : ErrorCode.Unknown;
-
-    /// <summary>
-    /// The HTTP status code.
-    /// </summary>
-    public int? StatusCode => (InnerException as FlurlHttpException)?.Call?.Response?.StatusCode;
 }
