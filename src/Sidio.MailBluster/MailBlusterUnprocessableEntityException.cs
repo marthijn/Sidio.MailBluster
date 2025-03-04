@@ -12,7 +12,7 @@ public sealed class MailBlusterUnprocessableEntityException : MailBlusterApiExce
     /// </summary>
     /// <param name="response">The response.</param>
     /// <param name="innerException">The inner exception.</param>
-    public MailBlusterUnprocessableEntityException(UnprocessableEntityResponse response, Exception? innerException)
+    public MailBlusterUnprocessableEntityException(UnprocessableEntityResponse response, Exception? innerException = null)
         : base("Unprocessable entity", innerException)
     {
         UnprocessableEntityResponse = response;

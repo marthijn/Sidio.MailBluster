@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Flurl.Http.Configuration;
 
 namespace Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
@@ -25,10 +24,8 @@ public sealed class MailBlusterService
         var apiKey = GetApiKey() ??
                      throw new InvalidOperationException("ApiKey is not available.");
 
-        var flurlClientCache =
-            _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<IFlurlClientCache>();
         var logger = _httpContextAccessor.HttpContext.RequestServices.GetRequiredService<ILogger<MailBlusterClient>>();
-        return new MailBlusterClient(flurlClientCache, baseUrl, apiKey, logger);
+        return new MailBlusterClient(baseUrl, apiKey, logger);
     }
 
     public void SetApiKey(string apiKey)

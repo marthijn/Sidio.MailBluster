@@ -1,4 +1,6 @@
-﻿namespace Sidio.MailBluster.Responses;
+﻿using System.Text.Json.Serialization;
+
+namespace Sidio.MailBluster.Responses;
 
 /// <summary>
 /// The error response.
@@ -8,5 +10,6 @@ public sealed record ErrorResponse : MailBlusterResponse
     /// <summary>
     /// Gets the error code.
     /// </summary>
+    [JsonPropertyName("code")]
     public string? Code { get; init; }
 }

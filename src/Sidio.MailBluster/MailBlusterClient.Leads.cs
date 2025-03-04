@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Logging;
+﻿using RestSharp;
+using Sidio.MailBluster.Logging;
 using Sidio.MailBluster.Requests.Leads;
 using Sidio.MailBluster.Responses.Leads;
 
@@ -10,11 +11,13 @@ public sealed partial class MailBlusterClient
     public async Task<CreateLeadResponse> CreateLeadAsync(CreateLeadRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogCreateLeadRequest(request.Email, request);
-        var response = await DefaultClient
-            .Request(MailBlusterApiConstants.Leads)
-            .PostJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        var result = await response.GetJsonAsync<CreateLeadResponse>().ConfigureAwait(false);
+
+        var restRequest = new RestRequest(MailBlusterApiConstants.Leads, Method.Post);
+        restRequest.AddJsonBody(request);
+
+        var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+        var result = HandleResponse<CreateLeadResponse>(response);
+
         _logger.LogCreateLeadResponse(request.Email, result);
         return result;
     }
@@ -26,11 +29,10 @@ public sealed partial class MailBlusterClient
 
         try
         {
-            var response = await DefaultClient
-                .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
-                .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-
-            var result = await response.GetJsonAsync<GetLeadResponse>().ConfigureAwait(false);
+            var restRequest = new RestRequest(MailBlusterApiConstants.LeadsByHash);
+            restRequest.AddUrlSegment(MailBlusterApiConstants.LeadHash, CreateMd5Hash(email));
+            var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+            var result = HandleResponse<GetLeadResponse>(response);
             _logger.LogGetLeadResponse(email, result);
             return result;
         }
@@ -46,11 +48,14 @@ public sealed partial class MailBlusterClient
     public async Task<UpdateLeadResponse> UpdateLeadAsync(string email, UpdateLeadRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogUpdateLeadRequest(email, request);
-        var response = await DefaultClient
-            .Request(MailBlusterApiConstants.Leads, CreateMd5Hash(email))
-            .PutJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        var result = await response.GetJsonAsync<UpdateLeadResponse>().ConfigureAwait(false);
+
+        var restRequest = new RestRequest(MailBlusterApiConstants.LeadsByHash, Method.Put);
+        restRequest.AddUrlSegment(MailBlusterApiConstants.LeadHash, CreateMd5Hash(email));
+        restRequest.AddJsonBody(request);
+
+        var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+        var result = HandleResponse<UpdateLeadResponse>(response);
+
         _logger.LogUpdateLeadResponse(email, result);
         return result;
     }
@@ -62,10 +67,12 @@ public sealed partial class MailBlusterClient
         try
         {
             var md5 = CreateMd5Hash(email);
-            var response = await DefaultClient
-                .Request(MailBlusterApiConstants.Leads, md5)
-                .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-            var result = await response.GetJsonAsync<DeleteLeadResponse>().ConfigureAwait(false);
+            var restRequest = new RestRequest(MailBlusterApiConstants.LeadsByHash, Method.Delete);
+            restRequest.AddUrlSegment(MailBlusterApiConstants.LeadHash, md5);
+
+            var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+            var result = HandleResponse<DeleteLeadResponse>(response);
+
             _logger.LogDeleteLeadResponse(email, result);
             return result;
         }

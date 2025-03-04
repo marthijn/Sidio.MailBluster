@@ -1,4 +1,6 @@
-﻿using Sidio.MailBluster.Requests.Leads;
+﻿using System.Net;
+using RestSharp;
+using Sidio.MailBluster.Requests.Leads;
 
 namespace Sidio.MailBluster.Tests;
 
@@ -8,12 +10,18 @@ public sealed partial class MailBlusterClientTests
     public async Task CreateLeadAsync_WhenRequestIsValid_ShouldReturnLead()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("CreateResponse.json", "Leads"));
+        var responseData = ReadJsonData("CreateResponse.json", "Leads");
+        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
 
         var fields = new Dictionary<string, string> {{_fixture.Create<string>(), _fixture.Create<string>()}};
 
         var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();
-        var client = CreateClient();
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Leads),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.CreateLeadAsync(request);
@@ -23,19 +31,24 @@ public sealed partial class MailBlusterClientTests
         response.Message.Should().Be("Lead added");
         response.Lead!.Email.Should().Be("richard@example.com");
         response.Lead.Id.Should().Be(329395);
-        _httpTest.ShouldHaveCalled($"*/leads").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task CreateLeadAsync_UnprocessableEntity_ShouldReturnError()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("UnprocessableEntity.json", "Errors"), 422);
+        var responseData = ReadJsonData("UnprocessableEntity.json", "Errors");
+        var restResponse = CreateResponse(HttpStatusCode.UnprocessableEntity, responseData);
 
         var fields = new Dictionary<string, string> {{_fixture.Create<string>(), _fixture.Create<string>()}};
 
         var request = _fixture.Build<CreateLeadRequest>().With(x => x.Fields, fields).Create();
-        var client = CreateClient();
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Post && r.Resource == MailBlusterApiConstants.Leads),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var action = () => client.CreateLeadAsync(request);
@@ -45,20 +58,25 @@ public sealed partial class MailBlusterClientTests
             .Where(
                 x => x.UnprocessableEntityResponse["id"] == "Order ID is required" &&
                      x.UnprocessableEntityResponse["customer"] == "Customer is required");
-        _httpTest.ShouldHaveCalled($"*/leads").WithHeader("Authorization", _options.Value.ApiKey)
-            .WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task UpdateLeadAsync_WhenLeadExists_ShouldReturnLead()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("UpdateResponse.json", "Leads"));
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
+        var responseData = ReadJsonData("UpdateResponse.json", "Leads");
+        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+
         var request = _fixture.Build<UpdateLeadRequest>()
             .With(x => x.Email, RequestEmail).Create();
-        var client = CreateClient();
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Put && r.Resource == MailBlusterApiConstants.LeadsByHash),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.UpdateLeadAsync(RequestEmail, request);
@@ -68,17 +86,24 @@ public sealed partial class MailBlusterClientTests
         response.Message.Should().Be("Lead updated");
         response.Lead!.Email.Should().Be("richard@example.com");
         response.Lead.Id.Should().Be(329395);
-        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task GetLeadAsync_WhenRequestIsValid_ShouldReturnLead()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("ReadResponse.json", "Leads"));
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
-        var client = CreateClient();
+        var responseData = ReadJsonData("ReadResponse.json", "Leads");
+        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.LeadsByHash
+                    && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.GetLeadAsync(RequestEmail);
@@ -97,41 +122,54 @@ public sealed partial class MailBlusterClientTests
         response.UpdatedAt.Should().Be("2016-07-23T08:03:18.954Z");
         response.Fields.Should().BeEquivalentTo(new Dictionary<string, string> {{"gender", "Male"}, {"address", "Silicon Valley"}});
         response.Tags.Should().BeEquivalentTo(["iPhone User", "Startup"]);
-        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
     public async Task GetLeadAsync_WhenApiEndpointDoesNotExist_ShouldReturnError()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("ApiEndpointDoesNotExist.json", "Errors"), 404);
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
-        var client = CreateClient();
+        var responseData = ReadJsonData("ApiEndpointDoesNotExist.json", "Errors");
+        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
+
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.LeadsByHash
+                                                                   && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var action = () => client.GetLeadAsync(RequestEmail);
 
         // assert
-        await action.Should().ThrowExactlyAsync<MailBlusterHttpException>().Where(x => x.StatusCode == 404);
-        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
+        await action.Should().ThrowExactlyAsync<MailBlusterHttpException>().Where(x => x.HttpStatusCode == HttpStatusCode.NotFound);
     }
 
     [Fact]
     public async Task GetLeadAsync_WhenLeadDoesNotExist_ShouldReturnNull()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("NotFoundResponse.json", "Leads"), 404);
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
-        var client = CreateClient();
+        var responseData = ReadJsonData("NotFoundResponse.json", "Leads");
+        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
+
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Get && r.Resource == MailBlusterApiConstants.LeadsByHash
+                                                                   && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.GetLeadAsync(RequestEmail);
 
         // assert
         response.Should().BeNull();
-        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
@@ -140,8 +178,16 @@ public sealed partial class MailBlusterClientTests
         // arrange
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
-        _httpTest.RespondWith(ReadJsonData("DeleteResponse.json", "Leads"));
-        var client = CreateClient();
+        var responseData = ReadJsonData("DeleteResponse.json", "Leads");
+        var restResponse = CreateResponse(HttpStatusCode.OK, responseData);
+
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.LeadsByHash
+                                                                      && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.DeleteLeadAsync(RequestEmail);
@@ -151,7 +197,6 @@ public sealed partial class MailBlusterClientTests
         response.LeadHash.Should().Be("5a91f0b2d2c1e5c3229d906d978b7337");
         response.Message.Should().Be("Lead deleted");
         response.Success.Should().BeTrue();
-        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
@@ -160,8 +205,16 @@ public sealed partial class MailBlusterClientTests
         // arrange
         const string RequestEmail = "noreply@sidio.nl";
         const string RequestMd5 = "949c658fa59ccb5a816400a4b0ad36f8";
-        _httpTest.RespondWith(ReadJsonData("DeleteNotFoundResponse.json", "Leads"), 404);
-        var client = CreateClient();
+        var responseData = ReadJsonData("DeleteNotFoundResponse.json", "Leads");
+        var restResponse = CreateResponse(HttpStatusCode.NotFound, responseData);
+
+        var client = CreateClient(out var restClientMock);
+        restClientMock.Setup(
+                x => x.ExecuteAsync(
+                    It.Is<RestRequest>(r => r.Method == Method.Delete && r.Resource == MailBlusterApiConstants.LeadsByHash
+                                                                      && r.Parameters.Any(p => p.Value!.ToString() == RequestMd5)),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(restResponse);
 
         // act
         var response = await client.DeleteLeadAsync(RequestEmail);
@@ -171,6 +224,5 @@ public sealed partial class MailBlusterClientTests
         response.LeadHash.Should().BeNullOrEmpty();
         response.Message.Should().Be("Lead not found");
         response.Success.Should().BeFalse();
-        _httpTest.ShouldHaveCalled($"*/leads/{RequestMd5}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 }

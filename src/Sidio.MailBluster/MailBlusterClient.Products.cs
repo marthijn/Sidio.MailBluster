@@ -1,4 +1,4 @@
-﻿using Flurl.Http;
+﻿using RestSharp;
 using Sidio.MailBluster.Logging;
 using Sidio.MailBluster.Requests.Products;
 using Sidio.MailBluster.Responses.Products;
@@ -14,13 +14,14 @@ public sealed partial class MailBlusterClient
         CancellationToken cancellationToken = default)
     {
         _logger.LogGetProductsRequest(pageNo, perPage);
-        var response = await DefaultClient
-            .Request(MailBlusterApiConstants.Products)
-            .AppendQueryParam("pageNo", pageNo)
-            .AppendQueryParam("perPage", perPage)
-            .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        var result = await response.GetJsonAsync<GetProductsResponse>().ConfigureAwait(false);
+        var restRequest = new RestRequest(MailBlusterApiConstants.Products);
+        restRequest.AddQueryParameter("pageNo", pageNo?.ToString() ?? string.Empty);
+        restRequest.AddQueryParameter("perPage", perPage?.ToString() ?? string.Empty);
+
+        var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+        var result = HandleResponse<GetProductsResponse>(response);
+
         _logger.LogGetProductsResponse(result);
         return result;
     }
@@ -31,11 +32,12 @@ public sealed partial class MailBlusterClient
         _logger.LogGetProductRequest(id);
         try
         {
-            var response = await DefaultClient
-                .Request(MailBlusterApiConstants.Products, id)
-                .GetAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            var restRequest = new RestRequest(MailBlusterApiConstants.ProductsById);
+            restRequest.AddUrlSegment(MailBlusterApiConstants.ProductId, id);
 
-            var result = await response.GetJsonAsync<GetProductResponse>().ConfigureAwait(false);
+            var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+            var result = HandleResponse<GetProductResponse>(response);
+
             _logger.LogGetProductResponse(id, result);
             return result;
         }
@@ -53,11 +55,13 @@ public sealed partial class MailBlusterClient
         CancellationToken cancellationToken = default)
     {
         _logger.LogCreateProductRequest(request.Name, request);
-        var response = await DefaultClient
-            .Request(MailBlusterApiConstants.Products)
-            .PostJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        var result = await response.GetJsonAsync<CreateProductResponse>().ConfigureAwait(false);
+
+        var restRequest = new RestRequest(MailBlusterApiConstants.Products, Method.Post);
+        restRequest.AddJsonBody(request);
+
+        var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+        var result = HandleResponse<CreateProductResponse>(response);
+
         _logger.LogCreateProductResponse(request.Name, result);
         return result;
     }
@@ -66,11 +70,14 @@ public sealed partial class MailBlusterClient
     public async Task<UpdateProductResponse> UpdateProductAsync(string id, UpdateProductRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogUpdateProductRequest(id, request);
-        var response = await DefaultClient
-            .Request(MailBlusterApiConstants.Products, id)
-            .PutJsonAndHandleErrorAsync(request, cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        var result = await response.GetJsonAsync<UpdateProductResponse>().ConfigureAwait(false);
+
+        var restRequest = new RestRequest(MailBlusterApiConstants.ProductsById, Method.Put);
+        restRequest.AddUrlSegment(MailBlusterApiConstants.ProductId, id);
+        restRequest.AddJsonBody(request);
+
+        var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+        var result = HandleResponse<UpdateProductResponse>(response);
+
         _logger.LogUpdateProductResponse(id, result);
         return result;
     }
@@ -81,10 +88,12 @@ public sealed partial class MailBlusterClient
         _logger.LogDeleteProductRequest(id);
         try
         {
-            var response = await DefaultClient
-                .Request(MailBlusterApiConstants.Products, id)
-                .DeleteAndHandleErrorAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-            var result = await response.GetJsonAsync<DeleteProductResponse>().ConfigureAwait(false);
+            var restRequest = new RestRequest(MailBlusterApiConstants.ProductsById, Method.Delete);
+            restRequest.AddUrlSegment(MailBlusterApiConstants.ProductId, id);
+
+            var response = await _restClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
+            var result = HandleResponse<DeleteProductResponse>(response);
+
             _logger.LogDeleteProductResponse(id, result);
             return result;
         }
