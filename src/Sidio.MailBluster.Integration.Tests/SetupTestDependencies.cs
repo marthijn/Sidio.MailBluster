@@ -68,15 +68,15 @@ public sealed class SetupTestDependencies
 
     private static bool IsTransientError(MailBlusterHttpException exception)
     {
-        int[] transientHttpStatusCodes =
+        HttpStatusCode[] transientHttpStatusCodes =
         [
-            (int)HttpStatusCode.TooManyRequests,
-            (int)HttpStatusCode.RequestTimeout,
-            (int)HttpStatusCode.BadGateway,
-            (int)HttpStatusCode.ServiceUnavailable,
-            (int)HttpStatusCode.GatewayTimeout,
+            HttpStatusCode.TooManyRequests,
+            HttpStatusCode.RequestTimeout,
+            HttpStatusCode.BadGateway,
+            HttpStatusCode.ServiceUnavailable,
+            HttpStatusCode.GatewayTimeout,
         ];
 
-        return exception.StatusCode.HasValue && transientHttpStatusCodes.Contains(exception.StatusCode.Value);
+        return transientHttpStatusCodes.Contains(exception.HttpStatusCode);
     }
 }

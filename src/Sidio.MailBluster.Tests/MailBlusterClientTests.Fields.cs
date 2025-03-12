@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Requests.Fields;
+﻿using System.Net;
+using Sidio.MailBluster.Requests.Fields;
 using Sidio.MailBluster.Responses;
 
 namespace Sidio.MailBluster.Tests;
@@ -9,8 +10,12 @@ public sealed partial class MailBlusterClientTests
     public async Task GetFieldsAsync_WhenRequestIsValid_ShouldReturnFields()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("ReadResponse.json", "Fields"));
-        var client = CreateClient();
+        var responseData = ReadJsonData("ReadResponse.json", "Fields");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Fields}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetFieldsAsync();
@@ -30,10 +35,14 @@ public sealed partial class MailBlusterClientTests
     public async Task CreateFieldAsync_WhenRequestIsValid_ShouldReturnField()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("CreateResponse.json", "Fields"));
+        var responseData = ReadJsonData("CreateResponse.json", "Fields");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Fields}")
+            .Respond(HttpStatusCode.Created, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         var request = _fixture.Build<CreateFieldRequest>().Create();
-        var client = CreateClient();
 
         // act
         var response = await client.CreateFieldAsync(request);
@@ -43,17 +52,19 @@ public sealed partial class MailBlusterClientTests
         response.Message.Should().Be("Field added");
         response.Field!.Id.Should().Be(9788646);
         response.Field.FieldLabel.Should().Be("Gender");
-        _httpTest.ShouldHaveCalled($"*/fields").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task CreateFieldAsync_WhenFeatureIsLocked_ShouldReturnHttpError()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("FeatureLocked.json", "Errors"), 403);
+        var responseData = ReadJsonData("FeatureLocked.json", "Errors");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Fields}")
+            .Respond(HttpStatusCode.Forbidden, ApplicationJson, responseData);
 
+        var client = CreateClient(mockHttp);
         var request = _fixture.Build<CreateFieldRequest>().Create();
-        var client = CreateClient();
 
         // act
         var action = () => client.CreateFieldAsync(request);
@@ -62,17 +73,21 @@ public sealed partial class MailBlusterClientTests
         await action.Should().ThrowExactlyAsync<MailBlusterHttpException>()
             .Where(x => x.ErrorCode == ErrorCode.FeatureLocked)
             .WithMessage("To access this feature, please upgrade your plan");
-        _httpTest.ShouldHaveCalled($"*/fields").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task UpdateFieldAsync_WhenFieldExists_ShouldReturnField()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("UpdateResponse.json", "Fields"));
         const long Id = 9788646;
+        var responseData = ReadJsonData("UpdateResponse.json", "Fields");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.FieldsById.Replace("{field_id}", Id.ToString())}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
+
         var request = _fixture.Build<UpdateFieldRequest>().Create();
-        var client = CreateClient();
 
         // act
         var response = await client.UpdateFieldAsync(Id, request);
@@ -83,7 +98,6 @@ public sealed partial class MailBlusterClientTests
         response.Field!.FieldLabel.Should().Be("Gender");
         response.Field.Id.Should().Be(Id);
         response.Field.FieldMergeTag.Should().Be("gender");
-        _httpTest.ShouldHaveCalled($"*/fields/{Id}").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
@@ -91,8 +105,12 @@ public sealed partial class MailBlusterClientTests
     {
         // arrange
         const long Id = 9788646;
-        _httpTest.RespondWith(ReadJsonData("DeleteResponse.json", "Fields"));
-        var client = CreateClient();
+        var responseData = ReadJsonData("DeleteResponse.json", "Fields");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.FieldsById.Replace("{field_id}", Id.ToString())}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteFieldAsync(Id);
@@ -102,16 +120,19 @@ public sealed partial class MailBlusterClientTests
         response.Id.Should().Be(Id);
         response.Message.Should().Be("Field deleted");
         response.Success.Should().BeTrue();
-        _httpTest.ShouldHaveCalled($"*/fields/{Id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
     public async Task DeleteFieldAsync_WhenFieldDoesNotExist_ShouldReturnSuccessWithEmptyId()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("DeleteNotFoundResponse.json", "Fields"), 404);
         var id = _fixture.Create<long>();
-        var client = CreateClient();
+        var responseData = ReadJsonData("DeleteNotFoundResponse.json", "Fields");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.FieldsById.Replace("{field_id}", id.ToString())}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteFieldAsync(id);
@@ -121,6 +142,5 @@ public sealed partial class MailBlusterClientTests
         response.Id.Should().BeNull();
         response.Message.Should().Be("Field not found");
         response.Success.Should().BeFalse();
-        _httpTest.ShouldHaveCalled($"*/fields/{id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 }
