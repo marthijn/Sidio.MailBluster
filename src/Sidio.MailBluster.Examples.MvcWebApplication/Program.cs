@@ -1,7 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using Flurl.Http.Configuration;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Sidio.MailBluster.Compliance;
 using Sidio.MailBluster.Examples.MvcWebApplication.Services;
 
@@ -10,8 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // In this example the api key is stored in the session. Therefor the options pattern is not used.
 // This is not recommended for production use.
-builder.Services.TryAddSingleton<IFlurlClientCache, FlurlClientCache>();
-
 builder.Services
     .AddHttpContextAccessor()
     .AddScoped<MailBlusterService>()

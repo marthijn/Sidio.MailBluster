@@ -136,6 +136,11 @@ Install these packages in your solution:
 
 Ensure that the Redaction framework is configured correctly.
 
+## Upgrade to version 2.x
+In v2.x the dependency Flurl is replaced by RestSharp:
+- Breaking: `MailBlusterHttpException`: the property `StatusCode` is replaced by `HttpStatusCode` and is now of type `HttpStatusCode`.
+- Change: the `IMailBlusterClient` is now registered as a singleton.
+
 # Disclaimer
 This package is not affiliated with MailBluster. Although we try to cover the API as much as possible using unit- 
 and integration testing, we cannot guarantee that all features or error states have been implemented.

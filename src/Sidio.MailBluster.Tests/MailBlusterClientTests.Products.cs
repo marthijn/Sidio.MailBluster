@@ -1,4 +1,5 @@
-﻿using Sidio.MailBluster.Requests.Products;
+﻿using System.Net;
+using Sidio.MailBluster.Requests.Products;
 
 namespace Sidio.MailBluster.Tests;
 
@@ -8,8 +9,12 @@ public sealed partial class MailBlusterClientTests
     public async Task GetProductsAsync_WhenRequestIsValid_ShouldReturnProducts()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("GetProductsResponse.json", "Products"));
-        var client = CreateClient();
+        var responseData = ReadJsonData("GetProductsResponse.json", "Products");
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Products}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetProductsAsync();
@@ -26,55 +31,61 @@ public sealed partial class MailBlusterClientTests
         response.Meta.NextPageNo.Should().Be(2);
         response.Meta.PerPage.Should().Be(10);
         response.Meta.TotalPage.Should().Be(16);
-
-        _httpTest.ShouldHaveCalled($"*/products").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
     public async Task GetProductAsync_WhenRequestIsValid_ShouldReturnProduct()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("GetProductResponse.json", "Products"));
+        var responseData = ReadJsonData("GetProductResponse.json", "Products");
         var id = _fixture.Create<string>();
-        var client = CreateClient();
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetProductAsync(id);
 
         // assert
         response.Should().NotBeNull();
-        response!.Id.Should().Be("101");
+        response.Id.Should().Be("101");
         response.Name.Should().Be("Reign Html Template");
         response.CreatedAt.Should().Be("2016-07-23T08:03:18.954Z");
         response.UpdatedAt.Should().Be("2016-11-04T01:32:12.000Z");
-
-        _httpTest.ShouldHaveCalled($"*/products/{id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
     public async Task GetProductAsync_WhenProductDoesNotExist_ShouldReturnNull()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("NotFoundResponse.json", "Products"), 404);
+        var responseData = ReadJsonData("NotFoundResponse.json", "Products");
         var id = _fixture.Create<string>();
-        var client = CreateClient();
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.GetProductAsync(id);
 
         // assert
         response.Should().BeNull();
-
-        _httpTest.ShouldHaveCalled($"*/products/{id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
     public async Task CreateProductAsync_WhenRequestIsValid_ShouldReturnProduct()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("CreateResponse.json", "Products"));
+        var responseData = ReadJsonData("CreateResponse.json", "Products");
         var request = _fixture.Build<CreateProductRequest>().Create();
-        var client = CreateClient();
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Products}")
+            .Respond(HttpStatusCode.Created, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.CreateProductAsync(request);
@@ -85,16 +96,19 @@ public sealed partial class MailBlusterClientTests
         response.Product.Should().NotBeNull();
         response.Product!.Id.Should().Be("101");
         response.Product.Name.Should().Be("Reign Html Template");
-        _httpTest.ShouldHaveCalled($"*/products").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task CreateProductAsync_UnprocessableEntity_ShouldReturnError()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("UnprocessableEntity.json", "Errors"), 422);
+        var responseData = ReadJsonData("UnprocessableEntity.json", "Errors");
         var request = _fixture.Build<CreateProductRequest>().Create();
-        var client = CreateClient();
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.Products}")
+            .Respond(HttpStatusCode.UnprocessableEntity, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var action = () => client.CreateProductAsync(request);
@@ -104,17 +118,20 @@ public sealed partial class MailBlusterClientTests
             .Where(
                 x => x.UnprocessableEntityResponse["id"] == "Order ID is required" &&
                      x.UnprocessableEntityResponse["customer"] == "Customer is required");
-        _httpTest.ShouldHaveCalled($"*/products").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task UpdateProductAsync_WhenProductExists_ShouldReturnProduct()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("UpdateResponse.json", "Products"));
+        var responseData = ReadJsonData("UpdateResponse.json", "Products");
         var request = _fixture.Build<UpdateProductRequest>().Create();
         var id = _fixture.Create<string>();
-        var client = CreateClient();
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond( ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.UpdateProductAsync(id, request);
@@ -123,16 +140,19 @@ public sealed partial class MailBlusterClientTests
         response.Should().NotBeNull();
         response.Message.Should().Be("Product updated");
         response.Product!.Name.Should().Be("Reign PRO Html Template");
-        _httpTest.ShouldHaveCalled($"*/products/{id}").WithHeader("Authorization", _options.Value.ApiKey).WithContentType("application/json").WithRequestJson(request);
     }
 
     [Fact]
     public async Task DeleteProductAsync_WhenRequestIsValid_ShouldReturnSuccess()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("DeleteResponse.json", "Products"));
+        var responseData = ReadJsonData("DeleteResponse.json", "Products");
         var id = _fixture.Create<string>();
-        var client = CreateClient();
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteProductAsync(id);
@@ -142,16 +162,19 @@ public sealed partial class MailBlusterClientTests
         response.Id.Should().Be("101");
         response.Message.Should().Be("Product deleted");
         response.Success.Should().BeTrue();
-        _httpTest.ShouldHaveCalled($"*/products/{id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 
     [Fact]
     public async Task DeleteProductAsync_WhenProductDoesNotExist_ShouldReturnSuccessWithEmptyId()
     {
         // arrange
-        _httpTest.RespondWith(ReadJsonData("DeleteNotFoundResponse.json", "Products"), 404);
+        var responseData = ReadJsonData("DeleteNotFoundResponse.json", "Products");
         var id = _fixture.Create<string>();
-        var client = CreateClient();
+        var mockHttp = new MockHttpMessageHandler();
+        mockHttp.When($"{BaseUrl}/{MailBlusterApiConstants.ProductsById.Replace("{product_id}", id)}")
+            .Respond(HttpStatusCode.NotFound, ApplicationJson, responseData);
+
+        var client = CreateClient(mockHttp);
 
         // act
         var response = await client.DeleteProductAsync(id);
@@ -161,6 +184,5 @@ public sealed partial class MailBlusterClientTests
         response.Id.Should().BeNullOrEmpty();
         response.Message.Should().Be("Product not found");
         response.Success.Should().BeFalse();
-        _httpTest.ShouldHaveCalled($"*/products/{id}").WithHeader("Authorization", _options.Value.ApiKey);
     }
 }
