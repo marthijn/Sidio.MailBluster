@@ -11,6 +11,11 @@ on:
   schedule:
     - cron: '0 2 * * 0'
 
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
 env:
   DOTNET_NOLOGO: true
   MAILBLUSTER_API_KEY: ${{ secrets.MAILBLUSTER_API_KEY }}
