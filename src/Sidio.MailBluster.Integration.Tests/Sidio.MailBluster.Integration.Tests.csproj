@@ -10,18 +10,22 @@
 
     <ItemGroup>
         <Using Include="Reqnroll" />
-        <Using Include="FluentAssertions" />
+        <Using Include="AwesomeAssertions" />
         <Using Include="AutoFixture" />
         <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.18.1" />
+        <PackageReference Include="AwesomeAssertions" Version="9.0.0" />
+        <PackageReference Include="AwesomeAssertions.Analyzers" Version="9.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.6" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.6" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-        <PackageReference Include="FluentAssertions" Version="8.4.0" />
         <PackageReference Include="Polly" Version="8.6.0" />
         <PackageReference Include="Reqnroll" Version="2.4.1" />
         <PackageReference Include="Reqnroll.Microsoft.Extensions.DependencyInjection" Version="2.4.1" />
