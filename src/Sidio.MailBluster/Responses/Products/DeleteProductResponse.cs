@@ -5,7 +5,7 @@ namespace Sidio.MailBluster.Responses.Products;
 /// <summary>
 /// The delete product response.
 /// </summary>
-public sealed record DeleteProductResponse : MailBlusterDeleteResponse
+public sealed class DeleteProductResponse : MailBlusterDeleteResponse
 {
     /// <summary>
     /// Gets the (unique) id.

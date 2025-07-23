@@ -5,7 +5,7 @@ namespace Sidio.MailBluster.Responses;
 /// <summary>
 /// The error response.
 /// </summary>
-public sealed record ErrorResponse : MailBlusterResponse
+public sealed class ErrorResponse : MailBlusterResponse
 {
     /// <summary>
     /// Gets the error code.

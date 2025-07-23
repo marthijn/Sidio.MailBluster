@@ -5,7 +5,7 @@ namespace Sidio.MailBluster.Responses;
 /// <summary>
 /// The MailBluster response.
 /// </summary>
-public record MailBlusterResponse : IMailBlusterResponse
+public class MailBlusterResponse : IMailBlusterResponse
 {
     /// <inheritdoc />
     [JsonPropertyName("message")]

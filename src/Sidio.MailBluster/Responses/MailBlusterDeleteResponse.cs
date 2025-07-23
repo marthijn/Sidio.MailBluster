@@ -3,7 +3,7 @@
 /// <summary>
 /// The abstract response from a delete request.
 /// </summary>
-public abstract record MailBlusterDeleteResponse : MailBlusterResponse
+public abstract class MailBlusterDeleteResponse : MailBlusterResponse
 {
     /// <summary>
     /// Indicates if the delete request was successful.

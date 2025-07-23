@@ -6,7 +6,7 @@ namespace Sidio.MailBluster.Responses.Fields;
 /// <summary>
 /// The create field response.
 /// </summary>
-public sealed record CreateFieldResponse : MailBlusterResponse
+public sealed class CreateFieldResponse : MailBlusterResponse
 {
     /// <summary>
     /// Gets the field.

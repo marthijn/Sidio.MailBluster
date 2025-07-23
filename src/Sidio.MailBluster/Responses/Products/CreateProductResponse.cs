@@ -6,7 +6,7 @@ namespace Sidio.MailBluster.Responses.Products;
 /// <summary>
 /// The create product response.
 /// </summary>
-public sealed record CreateProductResponse : MailBlusterResponse
+public sealed class CreateProductResponse : MailBlusterResponse
 {
     /// <summary>
     /// Gets the product.

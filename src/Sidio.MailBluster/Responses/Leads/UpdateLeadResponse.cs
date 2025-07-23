@@ -6,7 +6,7 @@ namespace Sidio.MailBluster.Responses.Leads;
 /// <summary>
 /// The update lead response.
 /// </summary>
-public sealed record UpdateLeadResponse : MailBlusterResponse
+public sealed class UpdateLeadResponse : MailBlusterResponse
 {
     /// <summary>
     /// Gets the lead.

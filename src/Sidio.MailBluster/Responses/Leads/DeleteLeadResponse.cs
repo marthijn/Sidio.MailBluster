@@ -5,7 +5,7 @@ namespace Sidio.MailBluster.Responses.Leads;
 /// <summary>
 /// The delete lead response.
 /// </summary>
-public sealed record DeleteLeadResponse : MailBlusterDeleteResponse
+public sealed class DeleteLeadResponse : MailBlusterDeleteResponse
 {
     /// <summary>
     /// Gets the lead hash.
