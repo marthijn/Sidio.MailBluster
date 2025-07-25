@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\release.yml = .github\workflows\release.yml
 		.github\dependabot.yml = .github\dependabot.yml
+		.github\workflows\dependabot-autoapprove.yml = .github\workflows\dependabot-autoapprove.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidio.MailBluster.Integration.Tests", "src\Sidio.MailBluster.Integration.Tests\Sidio.MailBluster.Integration.Tests.csproj", "{F7792EB2-B82F-4290-AC3E-BFEB55AB826A}"

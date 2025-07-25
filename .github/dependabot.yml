@@ -18,10 +18,12 @@ updates:
           - "*Test*"
           - "coverlet*"
           - "Reqnroll*"
+          - "RichardSzalay.MockHttp"
+          - "Polly"
       microsoft:
         patterns:
           - "Microsoft*"
   - package-ecosystem: "github-actions" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "weekly" 
+      interval: "monthly"
