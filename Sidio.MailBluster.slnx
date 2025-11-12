@@ -1,0 +1,23 @@
+<Solution>
+  <Folder Name="/Examples/">
+    <Project Path="src/Sidio.MailBluster.Examples.MvcWebApplication/Sidio.MailBluster.Examples.MvcWebApplication.csproj" />
+  </Folder>
+  <Folder Name="/SolutionItems/">
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+    <File Path="SECURITY.md" />
+  </Folder>
+  <Folder Name="/Src/">
+    <Project Path="src/Sidio.MailBluster/Sidio.MailBluster.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="src/Sidio.MailBluster.Integration.Tests/Sidio.MailBluster.Integration.Tests.csproj" />
+    <Project Path="src/Sidio.MailBluster.Tests/Sidio.MailBluster.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Workflows/">
+    <File Path=".github/dependabot.yml" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/dependabot-autoapprove.yml" />
+    <File Path=".github/workflows/release.yml" />
+  </Folder>
+</Solution>
